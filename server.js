@@ -2,10 +2,13 @@ var express = require("express");
 var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
+var engine = require("ejs-locals");
 
 io.set("log level", 1);
 
 // Express configuration
+
+app.engine("ejs", engine);
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.use(express.bodyParser());
@@ -16,7 +19,7 @@ app.get("/", function (req, res) {
 });
 
 io.sockets.on("connection", function (socket) {
-  socket.emit("news", { hello: "world" });
+  socket.emit("news", { hello: "world!" });
   socket.on("my other event", function (data) {
     console.log(data);
   });
