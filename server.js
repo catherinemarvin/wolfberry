@@ -22,5 +22,5 @@ io.sockets.on("connection", function (socket) {
   });
 });
 
-server.listen(80);
+server.listen(3000);
 console.log("Server started.");
