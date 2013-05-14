@@ -15,7 +15,14 @@ app.use(express.bodyParser());
 app.use(express['static'](__dirname + "/static")); //static is a keyword so it's referenced like this for my linter (:
 
 app.get("/", function (req, res) {
-  res.render("index");
+
+  var userAgent = req.header("user-agent");
+  if (/mobile/i.test(userAgent)) {
+    res.render("mobile");
+  }
+  else {
+    res.render("index");
+  }
 });
 
 app.get("/room/:roomId", function (req, res) {
