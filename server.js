@@ -6,6 +6,11 @@ var engine = require("ejs-locals");
 
 io.set("log level", 1);
 
+// Mongodb configuration
+
+var mongo = require("mongoskin");
+var db = mongo.db("localhost:27017/wolfberry?auto_reconnect", { safe: true });
+
 // Express configuration
 
 app.engine("ejs", engine);
@@ -27,6 +32,10 @@ app.get("/", function (req, res) {
 
 app.get("/room/:roomId", function (req, res) {
   var roomId = req.params.roomId;
+
+  if (!rooms[roomId]) {
+    
+  }
   res.render("board", { room: roomId });
 });
 
