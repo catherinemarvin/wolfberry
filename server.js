@@ -33,9 +33,14 @@ app.get("/", function (req, res) {
 app.get("/room/:roomId", function (req, res) {
   var roomId = req.params.roomId;
 
-  if (!rooms[roomId]) {
-    
-  }
+  db.collection("rooms").findOne({ id: roomId }, function (err, room) {
+    console.log(room);
+    if (!room) {
+      db.collection("rooms").insert({ id: roomId }, function (err, inserted) {
+        console.log(err);
+      });
+    }
+  });
   res.render("board", { room: roomId });
 });
 
