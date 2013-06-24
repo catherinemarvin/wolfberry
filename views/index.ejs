@@ -1,5 +1,6 @@
 <% layout("layout") -%>
 <script src="/socket.io/socket.io.js"></script>
+<script src="js/index.js"></script>
 <script>
   var socket = io.connect("http://localhost");
   socket.on("news", function (data) {
@@ -11,7 +12,7 @@
 <div class="jumbotron">
   <h1>Put your phones to good use!</h1>
   <p class="lead">Just accept the fact that phones have become a part of social interaction and use them to bond.</p>
-  <a class="btn btn-large btn-success" href="#">Open a room</a>
+  <div id="openRoomBtn" class="btn btn-large btn-success">Open a room</div>
 </div>
 
 <hr>

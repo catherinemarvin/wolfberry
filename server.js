@@ -20,7 +20,6 @@ app.use(express.bodyParser());
 app.use(express['static'](__dirname + "/static")); //static is a keyword so it's referenced like this for my linter (:
 
 app.get("/", function (req, res) {
-
   var userAgent = req.header("user-agent");
   if (/mobile/i.test(userAgent)) {
     res.render("mobile");
@@ -31,17 +30,25 @@ app.get("/", function (req, res) {
 });
 
 app.get("/room/:roomId", function (req, res) {
-  var roomId = req.params.roomId;
-
-  db.collection("rooms").findOne({ id: roomId }, function (err, room) {
+  var roomId = parseInt(req.params.roomId, 10);
+  res.render("board", { room: roomId });
+  db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
     console.log(room);
     if (!room) {
-      db.collection("rooms").insert({ id: roomId }, function (err, inserted) {
-        console.log(err);
-      });
+      console.log("This room doesn't exist!");
     }
+    res.render("board", { room: roomId});
   });
-  res.render("board", { room: roomId });
+});
+
+app.post("/createRoom", function (req, res) {
+  console.log("Creating a room!");
+  // Todo: Don't always insert room 1.
+  db.collection("rooms").insert({ roomId: 1 }, function (err, inserted) {
+    console.log("Room created");
+    console.log(inserted);
+    res.json({ roomId: 1 });
+  });
 });
 
 io.sockets.on("connection", function (socket) {
