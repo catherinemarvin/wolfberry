@@ -43,11 +43,20 @@ app.get("/room/:roomId", function (req, res) {
 
 app.post("/createRoom", function (req, res) {
   console.log("Creating a room!");
-  // Todo: Don't always insert room 1.
-  db.collection("rooms").insert({ roomId: 1 }, function (err, inserted) {
-    console.log("Room created");
-    console.log(inserted);
-    res.json({ roomId: 1 });
+  db.collection("rooms").find({}, { limit: 1, sort: { roomId: -1 } }).toArray(function (err, rooms) {
+    console.log(rooms);
+    var roomId;
+    if (rooms.length !== 0) {
+      var room = rooms[0];
+      roomId = room.roomId + 1;
+    } 
+    else {
+      roomId = 1;
+    }
+    db.collection("rooms").insert({ roomId: roomId }, function (err, inserted) {
+      console.log(inserted);
+      res.json({ roomId: roomId });
+    });
   });
 });
 
