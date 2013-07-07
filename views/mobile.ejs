@@ -1,1 +1,22 @@
-This is the mobile view.
+<% layout("layout") -%>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/mobile.js"></script>
+
+<div class="jumbotron">
+  <form type="get" action="joinRoom">
+    <input id="roomId" name="roomId" type="number"></input>
+    <button type="submit">Join a room</button>
+  </form>
+</div>
+
+<hr>
+
+<div class="row-fluid marketing">
+  <div class="span6">
+    <p>Mobile!</p>
+  </div>
+
+  <div class="span6">
+    <p>NodeJS is the best</p>
+  </div>
+</div>

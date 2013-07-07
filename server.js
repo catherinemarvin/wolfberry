@@ -60,6 +60,21 @@ app.post("/createRoom", function (req, res) {
   });
 });
 
+app.get("/joinRoom", function (req, res) {
+  console.log(req.query);
+  var roomId = parseInt(req.query.roomId, 10);
+  console.log("Joining room " + roomId);
+  db.collection("rooms").findOne({ roomId: roomId}, function (err, room) {
+    console.log(room);
+    if (room) {
+      res.render("board", { room: roomId });
+    }
+    else {
+      console.log("room not found!");
+    }
+  });
+});
+
 io.sockets.on("connection", function (socket) {
   socket.emit("news", { hello: "world!" });
   socket.on("my other event", function (data) {
