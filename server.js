@@ -53,7 +53,7 @@ app.post("/createRoom", function (req, res) {
     else {
       roomId = 1;
     }
-    db.collection("rooms").insert({ roomId: roomId }, function (err, inserted) {
+    db.collection("rooms").insert({ roomId: roomId, players: {} }, function (err, inserted) {
       console.log(inserted);
       res.json({ roomId: roomId });
     });
@@ -61,13 +61,13 @@ app.post("/createRoom", function (req, res) {
 });
 
 app.get("/joinRoom", function (req, res) {
+  console.log("Joining a room!");
   console.log(req.query);
   var roomId = parseInt(req.query.roomId, 10);
   console.log("Joining room " + roomId);
   db.collection("rooms").findOne({ roomId: roomId}, function (err, room) {
-    console.log(room);
     if (room) {
-      res.render("board", { room: roomId });
+      res.render("mobileboard", { room: roomId });
     }
     else {
       console.log("room not found!");
