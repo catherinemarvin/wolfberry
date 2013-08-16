@@ -3,7 +3,7 @@ var app = express();
 var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
 var engine = require("ejs-locals");
-
+var hearts = require("./hearts.js");
 io.set("log level", 1);
 
 // Mongodb configuration
