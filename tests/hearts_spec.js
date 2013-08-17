@@ -1,9 +1,9 @@
 var should = require("should");
 var hearts = require("../hearts.js");
 
-describe("Cards", function() {
-  describe("initialization", function() {
-    it("should correctly set values and suits", function() {
+describe("Cards", function () {
+  describe("initialization", function () {
+    it("should correctly set values and suits", function () {
       newCard = new hearts.Card(5, "spades");
       newCard.value.should.equal(5);
       newCard.suit.should.equal("spades");
@@ -15,6 +15,15 @@ describe("Cards", function() {
       catch (e) {
         e.should.equal("Invalid arguments to Card given");
       }
+    });
+  });
+});
+
+describe("Deck", function () {
+  describe("initialization", function () {
+    it("should create a deck with 52 cards", function () {
+      deck = new hearts.Deck();
+      deck.cards.length.should.equal(52);
     });
   });
 });
