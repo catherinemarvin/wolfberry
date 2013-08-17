@@ -36,5 +36,26 @@ Deck.prototype.dealCard = function () {
   return this.cards.shift();
 };
 
+var Player = function (name, position) {
+  this.name = name;
+  this.position = position;
+  this.hand = [];
+
+  return this;
+};
+
+Player.prototype.receiveCard = function (card) {
+  this.hand.push(card);
+};
+
+Player.prototype.playCard = function (card) {
+  var index = this.hand.indexOf(card);
+  if (index == -1) {
+    throw "Tried to play a card not in your hand!";
+  }
+  this.hand.splice(index, 1);
+};
+
 module.exports.Card = Card;
 module.exports.Deck = Deck;
+module.exports.Player = Player;

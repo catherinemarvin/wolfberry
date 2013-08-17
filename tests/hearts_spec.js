@@ -22,15 +22,54 @@ describe("Cards", function () {
 describe("Deck", function () {
   describe("initialization", function () {
     it("should create a deck with 52 cards", function () {
-      deck = new hearts.Deck();
+      var deck = new hearts.Deck();
       deck.cards.length.should.equal(52);
     });
   });
   describe("dealing a card", function () {
     it("should give a card and remove it from the deck", function () {
-      deck = new hearts.Deck();
+      var deck = new hearts.Deck();
       var card = deck.dealCard();
       deck.cards.indexOf(card).should.equal(-1);
+    });
+  });
+});
+
+describe("Player", function () {
+  describe("#receiveCard", function () {
+    it("should let you receive cards and add them to your hand", function () {
+      var player = new hearts.Player("Twilight", "north");
+      var card1 = new hearts.Card(5, "spades");
+      var card2 = new hearts.Card(10, "hearts");
+      player.hand.indexOf(card1).should.equal(-1);
+
+      player.receiveCard(card1);
+      player.receiveCard(card2);
+
+      player.hand.length.should.equal(2);
+      player.hand.indexOf(card1).should.not.equal(-1);
+      player.hand.indexOf(card2).should.not.equal(-1);
+    });
+  });
+
+  describe("#playCard", function () {
+    it("should let you play cards in your hand and also remove them", function () {
+      var player = new hearts.Player("Twilight", "north");
+      var card1 = new hearts.Card(5, "spades");
+      var card2 = new hearts.Card(10, "hearts");
+
+      player.receiveCard(card1);
+
+      player.playCard(card1);
+
+      player.hand.length.should.equal(0);
+
+      try {
+        player.playCard(card2);
+      }
+      catch (e) {
+        e.should.equal("Tried to play a card not in your hand!");
+      }
     });
   });
 });
