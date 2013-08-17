@@ -26,4 +26,11 @@ describe("Deck", function () {
       deck.cards.length.should.equal(52);
     });
   });
+  describe("dealing a card", function () {
+    it("should give a card and remove it from the deck", function () {
+      deck = new hearts.Deck();
+      var card = deck.dealCard();
+      deck.cards.indexOf(card).should.equal(-1);
+    });
+  });
 });

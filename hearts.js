@@ -32,5 +32,9 @@ Deck.prototype.shuffle = function () {
   }
 };
 
+Deck.prototype.dealCard = function () {
+  return this.cards.shift();
+};
+
 module.exports.Card = Card;
 module.exports.Deck = Deck;
