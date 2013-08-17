@@ -17,7 +17,19 @@ var Deck = function () {
       this.cards.push(new Card(VALUES[j], SUITS[i]));
     }
   }
+  this.shuffle();
   return this;
+};
+
+Deck.prototype.shuffle = function () {
+  var m = this.cards.length, temp, i;
+
+  while (m) {
+    i = Math.floor(Math.random() * m--);
+    temp = this.cards[m];
+    this.cards[m] = this.cards[i];
+    this.cards[i] = temp;
+  }
 };
 
 module.exports.Card = Card;
