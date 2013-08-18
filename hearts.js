@@ -56,6 +56,10 @@ Player.prototype.playCard = function (card) {
   this.hand.splice(index, 1);
 };
 
+var Game = function () {
+  this.players = [];
+};
+
 module.exports.Card = Card;
 module.exports.Deck = Deck;
 module.exports.Player = Player;
