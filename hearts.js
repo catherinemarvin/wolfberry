@@ -40,6 +40,7 @@ var Player = function (name, position) {
   this.name = name;
   this.position = position;
   this.hand = [];
+  this.tricks = [];
 
   return this;
 };
@@ -58,8 +59,36 @@ Player.prototype.playCard = function (card) {
 
 var Game = function () {
   this.players = [];
+  this.currentTrick = [];
+  this.penaltyCardPlayed = false;
+  this.firstTrick = [];
+  this.currentPlayer = null;
+  this.deck = new Deck();
+  return this;
+};
+
+Game.prototype.addPlayer = function (player) {
+  if (this.players.indexOf(player) != -1) {
+    throw "You're trying to add a player that's already here!";
+  }
+  this.players.push(player);
+};
+
+Game.prototype.startGame = function () {
+  var currentPlayerId = 0;
+  while (this.deck.cards.length > 0) {
+    card = this.deck.cards.shift();
+    this.players[currentPlayerId].receiveCard(card);
+    if (currentPlayerId < this.players.length - 1) {
+      currentPlayerId++;
+    }
+    else {
+      currentPlayerId = 0;
+    }
+  }
 };
 
 module.exports.Card = Card;
 module.exports.Deck = Deck;
 module.exports.Player = Player;
+module.exports.Game = Game;

@@ -73,3 +73,27 @@ describe("Player", function () {
     });
   });
 });
+
+describe("Game", function () {
+  describe("#startGame", function () {
+    it("should set the game up properly", function () {
+      var game = new hearts.Game();
+      var player1 = new hearts.Player("Twilight", "north");
+      var player2 = new hearts.Player("Rainbow", "west");
+      var player3 = new hearts.Player("Rarity", "south");
+      var player4 = new hearts.Player("Fluttershy", "east");
+
+      game.addPlayer(player1);
+      game.addPlayer(player2);
+      game.addPlayer(player3);
+      game.addPlayer(player4);
+
+      game.startGame();
+
+      player1.hand.length.should.equal(13);
+      player2.hand.length.should.equal(13);
+      player3.hand.length.should.equal(13);
+      player4.hand.length.should.equal(13);
+    });
+  });
+});
