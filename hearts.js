@@ -71,7 +71,7 @@ Game.prototype.addPlayer = function (player) {
   if (this.players.indexOf(player) != -1) {
     throw new Error("You're trying to add a player that's already here!");
   }
-  if (this.players.map(function (x) { return x.position }).indexOf(player.position) != -1) {
+  if (this.players.map(function (x) { return x.position; }).indexOf(player.position) != -1) {
     throw new Error("You're trying to add a player in the same position");
   }
   this.players.push(player);
