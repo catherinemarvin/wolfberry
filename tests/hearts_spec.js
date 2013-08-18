@@ -117,4 +117,40 @@ describe("Game", function () {
       player4.hand.length.should.equal(13);
     });
   });
+  describe("#playedCard", function () {
+    it("should let you play a legal card", function () {
+      var game = new hearts.Game();
+      var card1 = new hearts.Card(5, "spades");
+      var player1 = new hearts.Player("Twilight", "north");
+      game.addPlayer(player1);
+      game.playedCard(card1);
+      game.currentTrick.indexOf(card1).should.equal(0);
+    });
+
+    it("should not let you play a card that's already been played", function () {
+      var game = new hearts.Game();
+      var card1 = new hearts.Card(5, "spades");
+      var player1 = new hearts.Player("Twilight", "north");
+      var player2 = new hearts.Player("Rarity", "south");
+      game.addPlayer(player1);
+      game.addPlayer(player2);
+
+      game.playedCard(card1);
+      (function () {
+        game.playedCard(card1);
+      }).should.throwError("You're trying to play a card that's already been played");
+    });
+    it("should not let you play a card if it exceeds the number of players", function () {
+      var game = new hearts.Game();
+      var player1 = new hearts.Player("Twilight", "north");
+      var card1 = new hearts.Card(5, "spades");
+      var card2 = new hearts.Card(10, "hearts");
+      game.addPlayer(player1);
+
+      game.playedCard(card1);
+      (function () {
+        game.playedCard(card2);
+      }).should.throwError("You're trying to play more cards on this trick than the number of players");
+    });
+  });
 });

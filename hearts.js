@@ -41,6 +41,7 @@ var Player = function (name, position) {
   this.position = position;
   this.hand = [];
   this.tricks = [];
+  this.game = null;
 
   return this;
 };
@@ -89,6 +90,18 @@ Game.prototype.startGame = function () {
       currentPlayerId = 0;
     }
   }
+};
+
+Game.prototype.playedCard = function (card) {
+  if (this.currentTrick.length >= this.players.length) {
+    throw new Error("You're trying to play more cards on this trick than the number of players");
+  }
+  if (this.currentTrick.indexOf(card) != -1) {
+    throw new Error("You're trying to play a card that's already been played");
+  }
+  // TODO: Add logic about what cards are acceptable
+  this.currentTrick.push(card);
+  return true;
 };
 
 module.exports.Card = Card;
