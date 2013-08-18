@@ -9,12 +9,9 @@ describe("Cards", function () {
       newCard.suit.should.equal("spades");
     });
     it("should disallow improper values and suits", function () {
-      try {
+      (function () {
         badCard = new hearts.Card(5, "bananas");
-      }
-      catch (e) {
-        e.should.equal("Invalid arguments to Card given");
-      }
+      }).should.throwError("Invalid arguments to Card given");
     });
   });
 });
@@ -64,17 +61,41 @@ describe("Player", function () {
 
       player.hand.length.should.equal(0);
 
-      try {
+      (function () {
         player.playCard(card2);
-      }
-      catch (e) {
-        e.should.equal("Tried to play a card not in your hand!");
-      }
+      }).should.throwError("Tried to play a card not in your hand!");
     });
   });
 });
 
 describe("Game", function () {
+  describe("#addPlayer", function () {
+    it("should add new player", function () {
+      var game = new hearts.Game();
+      var player1 = new hearts.Player("Applejack", "north");
+      var player2 = new hearts.Player("Pinkie", "north");
+      game.addPlayer(player1);
+      game.players.length.should.equal(1);
+    });
+    it("should not let you add an already-added player", function () {
+      var game = new hearts.Game();
+      var player1 = new hearts.Player("Applejack", "north");
+      var player2 = new hearts.Player("Pinkie", "north");
+      game.addPlayer(player1);
+      (function () {
+        game.addPlayer(player1);
+      }).should.throwError("You're trying to add a player that's already here!");
+    });
+    it("should not let you add a player at the same position", function () {
+      var game = new hearts.Game();
+      var player1 = new hearts.Player("Applejack", "north");
+      var player2 = new hearts.Player("Pinkie", "north");
+      game.addPlayer(player1);
+      (function () {
+      game.addPlayer(player2);
+      }).should.throwError("You're trying to add a player in the same position");
+    });
+  });
   describe("#startGame", function () {
     it("should set the game up properly", function () {
       var game = new hearts.Game();

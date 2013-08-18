@@ -3,7 +3,7 @@ var VALUES = [1,2,3,4,5,6,7,8,9,10,11,12,13];
 
 var Card = function (value, suit) {
   if (SUITS.indexOf(suit) == -1 || VALUES.indexOf(value) == -1) {
-    throw "Invalid arguments to Card given";
+    throw new Error("Invalid arguments to Card given");
   }
   this.value = value;
   this.suit = suit;
@@ -52,7 +52,7 @@ Player.prototype.receiveCard = function (card) {
 Player.prototype.playCard = function (card) {
   var index = this.hand.indexOf(card);
   if (index == -1) {
-    throw "Tried to play a card not in your hand!";
+    throw new Error("Tried to play a card not in your hand!");
   }
   this.hand.splice(index, 1);
 };
@@ -69,7 +69,10 @@ var Game = function () {
 
 Game.prototype.addPlayer = function (player) {
   if (this.players.indexOf(player) != -1) {
-    throw "You're trying to add a player that's already here!";
+    throw new Error("You're trying to add a player that's already here!");
+  }
+  if (this.players.map(function (x) { return x.position }).indexOf(player.position) != -1) {
+    throw new Error("You're trying to add a player in the same position");
   }
   this.players.push(player);
 };
