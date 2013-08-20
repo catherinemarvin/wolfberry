@@ -92,7 +92,7 @@ Game.prototype.startGame = function () {
   }
 };
 
-Game.prototype.playedCard = function (card) {
+Game.prototype.playedCard = function (player, card) {
   if (this.currentTrick.length >= this.players.length) {
     throw new Error("You're trying to play more cards on this trick than the number of players");
   }

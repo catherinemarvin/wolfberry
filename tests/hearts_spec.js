@@ -66,6 +66,23 @@ describe("Player", function () {
       }).should.throwError("Tried to play a card not in your hand!");
     });
   });
+  describe("#takeTrick", function () {
+    it("should add the list of tricks to your hand", function () {
+      var player = new hearts.Player("Twilight", "north");
+      player.tricks.length.should.equal(0);
+
+      var card1 = new hearts.Card(5, "spades");
+      var card2 = new hearts.Card(6, "spades");
+      var card3 = new hearts.Card(7, "spades");
+      var card4 = new hearts.Card(8, "hearts");
+      var trick = [card1, card2, card3, card4];
+
+      player.takeTrick(trick);
+
+      player.tricks.length.should.equal(4);
+      player.tricks.indexOf(card1).should.not.equal(-1);
+    });
+  });
 });
 
 describe("Game", function () {
@@ -123,7 +140,8 @@ describe("Game", function () {
       var card1 = new hearts.Card(5, "spades");
       var player1 = new hearts.Player("Twilight", "north");
       game.addPlayer(player1);
-      game.playedCard(card1);
+      game.playedCard(player1, card1);
+
       game.currentTrick.indexOf(card1).should.equal(0);
     });
 
