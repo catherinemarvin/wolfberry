@@ -50,13 +50,18 @@ describe("Player", function () {
   });
 
   describe("#playCard", function () {
+    beforeEach(function () {
+      player = new hearts.Player("Twilight", "north");
+      card1 = new hearts.Card(5, "spades");
+      card2 = new hearts.Card(10, "hearts");
+      game = new hearts.Game();
+      player.joinGame(game);
+
+    });
+
     it("should let you play cards in your hand and also remove them", function () {
-      var player = new hearts.Player("Twilight", "north");
-      var card1 = new hearts.Card(5, "spades");
-      var card2 = new hearts.Card(10, "hearts");
 
       player.receiveCard(card1);
-
       player.playCard(card1);
 
       player.hand.length.should.equal(0);
@@ -64,6 +69,25 @@ describe("Player", function () {
       (function () {
         player.playCard(card2);
       }).should.throwError("Tried to play a card not in your hand!");
+    });
+
+    it("should not let you play hearts if they have not been broken", function () {
+      player.receiveCard(card1);
+      player.receiveCard(card2);
+      (function () {
+        player.playCard(card2);
+      }).should.throwError("You can't lead Hearts until it has been broken");
+    });
+
+    it("should make sure you follow suit", function () {
+      player.receiveCard(card1);
+      player.receiveCard(card2);
+
+      game.currentTrick = [new hearts.Card(11, "hearts")];
+
+      (function () {
+        player.playCard(card1);
+      }).should.throwError("You must follow suit if you can!");
     });
   });
   describe("#takeTrick", function () {
