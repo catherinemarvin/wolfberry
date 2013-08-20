@@ -83,6 +83,24 @@ describe("Player", function () {
       player.tricks.indexOf(card1).should.not.equal(-1);
     });
   });
+  describe("#scoreTricks", function () {
+    it("should properly add up the total number of points", function () {
+      var player = new hearts.Player("Twilight", "north");
+
+      var card1 = new hearts.Card(5, "hearts");
+      var card2 = new hearts.Card(6, "spades");
+      var card3 = new hearts.Card(12, "spades");
+      var card4 = new hearts.Card(8, "hearts");
+
+      player.tricks = [card1, card2, card3, card4];
+
+      player.score.should.equal(0);
+
+      player.scoreTricks();
+
+      player.score.should.equal(15);
+    });
+  });
 });
 
 describe("Game", function () {

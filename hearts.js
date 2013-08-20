@@ -42,6 +42,7 @@ var Player = function (name, position) {
   this.hand = [];
   this.tricks = [];
   this.game = null;
+  this.score = 0;
 
   return this;
 };
@@ -56,6 +57,23 @@ Player.prototype.playCard = function (card) {
     throw new Error("Tried to play a card not in your hand!");
   }
   this.hand.splice(index, 1);
+};
+
+Player.prototype.scoreTricks = function () {
+  var newScore = this.tricks.reduce(function (prev, current) {
+    if (current.suit == "hearts") {
+      return prev + 1;
+    }
+    else if (current.suit == "spades" && current.value == 12) {
+      return prev + 13;
+    }
+    else return prev;
+  }, 0);
+  this.score = newScore + this.score;
+};
+
+Player.prototype.takeTrick = function (trick) {
+  this.tricks = this.tricks.concat(trick);
 };
 
 var Game = function () {
@@ -102,6 +120,12 @@ Game.prototype.playedCard = function (player, card) {
   // TODO: Add logic about what cards are acceptable
   this.currentTrick.push(card);
   return true;
+};
+
+Game.prototype.scoreRound = function () {
+  for (var i = 0; i < this.players.length; i++) {
+    players[i].scoreTricks();
+  }
 };
 
 module.exports.Card = Card;
