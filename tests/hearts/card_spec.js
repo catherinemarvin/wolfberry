@@ -1,5 +1,5 @@
 var should = require("should");
-var card = require("../../hearts/card.js");
+var hearts = require("../../hearts/");
 
 describe("Cards", function () {
   describe("initialization", function () {

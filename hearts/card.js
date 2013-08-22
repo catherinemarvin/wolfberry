@@ -10,4 +10,4 @@ var Card = function (value, suit) {
   return this;
 };
 
-module.exports = Card;
+module.exports.Card = Card;

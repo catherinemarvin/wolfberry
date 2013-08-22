@@ -1,3 +1,5 @@
+var Card = require("./card").Card;
+
 var SUITS = ["clubs", "hearts", "spades", "diamonds"];
 var VALUES = [1,2,3,4,5,6,7,8,9,10,11,12,13];
 
@@ -27,4 +29,4 @@ Deck.prototype.dealCard = function () {
   return this.cards.shift();
 };
 
-module.exports = Deck;
+module.exports.Deck = Deck;

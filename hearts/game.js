@@ -1,3 +1,6 @@
+var Player = require("./player").Player;
+var Deck = require("./deck").Deck;
+
 var Game = function () {
   this.players = [];
   this.currentTrick = [];

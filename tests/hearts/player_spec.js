@@ -1,5 +1,5 @@
 var should = require("should");
-var player = require("../../hearts/player.js");
+var hearts = require("../../hearts/");
 
 describe("Player", function () {
   describe("#receiveCard", function () {

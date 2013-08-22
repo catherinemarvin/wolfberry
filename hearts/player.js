@@ -63,4 +63,4 @@ Player.prototype.joinGame = function (game) {
   this.game = game;
 };
 
-module.exports = Player;
+module.exports.Player = Player;
