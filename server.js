@@ -80,7 +80,11 @@ io.sockets.on("connection", function (socket) {
   socket.on("my other event", function (data) {
     console.log(data);
   });
+  socket.on("start game", function (data) {
+  console.log("Starting game");
+  });
 });
+
 
 server.listen(3000);
 console.log("Server started.");

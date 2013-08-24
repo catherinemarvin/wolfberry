@@ -1,8 +1,20 @@
 <% layout("layout") -%>
 
-<div>
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+  var socket = io.connect("http://localhost");
+
+  $(document).ready(function () {
+    $("#startGame").click(function () {
+      console.log("CLICKED");
+      socket.emit("start game");
+    });
+  });
+</script>
+
 This is the board view.
 Room: <%- room %>
 
-<button type="button" class="btn btn-primary">Start Game</button>
+<button id="startGame" type="button" class="btn btn-primary">Start Game</button>
 </div>
