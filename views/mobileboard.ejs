@@ -1,4 +1,10 @@
 <% layout("layout") -%>
 
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+  var socket = io.connect("http://localhost");
+</script>
+
 This is the mobile board view.
 Room: <%- room %>
