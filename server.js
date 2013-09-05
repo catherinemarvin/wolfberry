@@ -22,7 +22,7 @@ app.use(express['static'](__dirname + "/static")); //static is a keyword so it's
 app.get("/", function (req, res) {
   var userAgent = req.header("user-agent");
   if (/mobile/i.test(userAgent)) {
-    res.render("mobile");
+    res.render("mobileindex");
   }
   else {
     res.render("index");
@@ -36,7 +36,14 @@ app.get("/room/:roomId", function (req, res) {
     if (!room) {
       console.log("This room doesn't exist!");
     }
-    res.render("board", { room: roomId});
+
+    var userAgent = req.header("user-agent");
+    if (/mobile/i.test(userAgent)) {
+      res.render("board", { room: roomId});
+    }
+    else {
+      res.render("mobileboard");
+    }
   });
 });
 
@@ -66,7 +73,7 @@ app.get("/joinRoom", function (req, res) {
   console.log("Joining room " + roomId);
   db.collection("rooms").findOne({ roomId: roomId}, function (err, room) {
     if (room) {
-      res.render("mobileboard", { room: roomId });
+      res.render("player", { room: roomId });
     }
     else {
       console.log("room not found!");
@@ -80,7 +87,11 @@ io.sockets.on("connection", function (socket) {
     console.log(data);
   });
   socket.on("start game", function (data) {
-  console.log("Starting game");
+    console.log("Starting game");
+  });
+  socket.on("joinRoom", function (data) {
+    console.log("joining a room");
+    console.log(data);
   });
 });
 

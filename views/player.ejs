@@ -1,0 +1,16 @@
+<% layout("layout") -%>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+  var socket = io.connect("http://localhost");
+  var searchString = window.location.search;
+
+  var room = searchString.split("=")[1];
+
+  socket.emit("joinRoom", room);
+</script>
+
+<div>
+  <p>This is the player view.
+</div>
