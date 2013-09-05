@@ -31,7 +31,6 @@ app.get("/", function (req, res) {
 
 app.get("/room/:roomId", function (req, res) {
   var roomId = parseInt(req.params.roomId, 10);
-  res.render("board", { room: roomId });
   db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
     console.log(room);
     if (!room) {

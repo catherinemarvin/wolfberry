@@ -9,6 +9,5 @@ $(document).ready(function () {
   $("#joinRoom").click(function () {
     var roomNum = $("#roomId").val();
     window.location.href = "/room/" + roomNum;
-
   });
 });
