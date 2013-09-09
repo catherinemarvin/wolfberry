@@ -39,10 +39,10 @@ app.get("/room/:roomId", function (req, res) {
 
     var userAgent = req.header("user-agent");
     if (/mobile/i.test(userAgent)) {
-      res.render("board", { room: roomId});
+      res.render("mobileboard", { room: roomId});
     }
     else {
-      res.render("mobileboard");
+      res.render("board", { room: roomId });
     }
   });
 });
