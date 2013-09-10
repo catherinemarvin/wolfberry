@@ -39,7 +39,7 @@ app.get("/room/:roomId", function (req, res) {
 
     var userAgent = req.header("user-agent");
     if (/mobile/i.test(userAgent)) {
-      res.render("mobileboard", { room: roomId});
+      res.render("mobileboard", { room: roomId });
     }
     else {
       res.render("board", { room: roomId });
@@ -86,12 +86,13 @@ io.sockets.on("connection", function (socket) {
   socket.on("my other event", function (data) {
     console.log(data);
   });
-  socket.on("start game", function (data) {
+  socket.on("start game", function (room) {
     console.log("Starting game");
+    io.sockets['in'](room).emit("gameStart");
   });
   socket.on("joinRoom", function (data) {
-    console.log("joining a room");
-    console.log(data);
+    console.log("Joining room: "+ data);
+    socket.join(data);
   });
 });
 

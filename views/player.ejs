@@ -9,6 +9,10 @@
   var room = searchString.split("=")[1];
 
   socket.emit("joinRoom", room);
+
+  socket.on("gameStart", function (data) {
+    console.log("Game starting: player");
+  });
 </script>
 
 <div>
