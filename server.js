@@ -87,8 +87,19 @@ io.sockets.on("connection", function (socket) {
     console.log(data);
   });
   socket.on("start game", function (room) {
-    console.log("Starting game");
-    io.sockets['in'](room).emit("gameStart");
+    var roomId = parseInt(room, 10);
+    console.log("Starting game for room: "+roomId);
+    db.collection("rooms").findOne({ roomId: roomId }, function (err, roomObj) {
+      if (roomObj) {
+        roomObj["gameStarted"] = true;
+        db.collection("rooms").update({ roomId: roomId }, roomObj, {}, function (err, room) {
+          io.sockets['in'](room).emit("gameStart");
+        });
+      }
+      else {
+        console.log("Couldn't find a room");
+      }
+    });
   });
   socket.on("joinRoom", function (data) {
     console.log("Joining room: "+ data);
