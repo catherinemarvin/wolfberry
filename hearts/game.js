@@ -22,6 +22,9 @@ Game.prototype.addPlayer = function (player) {
 };
 
 Game.prototype.startGame = function () {
+  if (this.players.length != 4) {
+    throw new Error("You can't start a game unless you have four players");
+  }
   var currentPlayerId = 0;
   while (this.deck.cards.length > 0) {
     card = this.deck.cards.shift();

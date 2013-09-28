@@ -25,7 +25,7 @@ describe("Game", function () {
       var player2 = new hearts.Player("Pinkie", "north");
       game.addPlayer(player1);
       (function () {
-      game.addPlayer(player2);
+        game.addPlayer(player2);
       }).should.throwError("You're trying to add a player in the same position");
     });
   });
@@ -48,6 +48,12 @@ describe("Game", function () {
       player2.hand.length.should.equal(13);
       player3.hand.length.should.equal(13);
       player4.hand.length.should.equal(13);
+    });
+    it("should not start a game with less than four people", function () {
+      var game = new hearts.Game();
+      (function () {
+        game.startGame();
+      }).should.throwError("You can't start a game unless you have four players");
     });
   });
   describe("#playedCard", function () {
