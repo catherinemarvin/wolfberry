@@ -92,7 +92,14 @@ io.sockets.on("connection", function (socket) {
     console.log("Starting game for room: "+roomId);
     db.collection("rooms").findOne({ roomId: roomId }, function (err, roomObj) {
       if (roomObj) {
-        roomObj["gameStarted"] = true;
+        var gameState = roomObj.gameState;
+        try {
+          gameState.start();
+        }
+        catch (e) {
+          io.sockets['in'](room).emit("failure", e);
+        }
+        roomObj.gameStarted = true;
         db.collection("rooms").update({ roomId: roomId }, roomObj, {}, function (err, room) {
           io.sockets['in'](room).emit("gameStart");
         });
