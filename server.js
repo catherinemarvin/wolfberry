@@ -29,6 +29,10 @@ app.get("/", function (req, res) {
   }
 });
 
+app.get("/about", function (req, res) {
+  res.render("about");
+});
+
 app.get("/room/:roomId", function (req, res) {
   var roomId = parseInt(req.params.roomId, 10);
   db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
