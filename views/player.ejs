@@ -1,6 +1,7 @@
 <% layout("layout") -%>
 
 <script src="/socket.io/socket.io.js"></script>
+<script src="js/uuid.js"></script>
 
 <script>
   var socket = io.connect("http://localhost");
@@ -8,11 +9,16 @@
 
   var room = searchString.split("=")[1];
 
-  socket.emit("joinRoom", room);
+  var playerId = uuid.v4();
+  socket.emit("joinRoom", { room: room, playerId: playerId });
 
   socket.on("gameStart", function (data) {
+    displayHand(data);
     console.log("Game starting: player");
   });
+
+  var displayHand = function () {
+  };
 </script>
 
 <div>

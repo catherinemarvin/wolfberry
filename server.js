@@ -114,8 +114,10 @@ io.sockets.on("connection", function (socket) {
     });
   });
   socket.on("joinRoom", function (data) {
-    console.log("Joining room: "+ data);
-    socket.join(data);
+    var room = data.room;
+    var playerId = data.playerId;
+    console.log("Joining room: "+ room);
+    socket.join(room);
   });
 });
 
