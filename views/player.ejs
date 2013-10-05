@@ -1,5 +1,6 @@
 <% layout("layout") -%>
 
+<link rel="stylesheet" href="/css/player.css">
 <script src="/socket.io/socket.io.js"></script>
 <script src="js/uuid.js"></script>
 
@@ -17,10 +18,15 @@
     console.log("Game starting: player");
   });
 
-  var displayHand = function () {
+  var displayHand = function (cards) {
+    $("#hand").show();
   };
 </script>
 
 <div>
   <p>This is the player view.
+</div>
+
+<div id="hand">
+  I've got a hand!
 </div>
