@@ -11,6 +11,10 @@ var Game = function () {
   return this;
 };
 
+Game.addPlayer = function (game, player) {
+  game.players.push(player);
+};
+
 Game.prototype.addPlayer = function (player) {
   if (this.players.indexOf(player) != -1) {
     throw new Error("You're trying to add a player that's already here!");

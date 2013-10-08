@@ -52,10 +52,8 @@ app.get("/room/:roomId", function (req, res) {
 });
 
 app.post("/createRoom", function (req, res) {
-  console.log("Creating a room!");
   var newGame = new hearts.Game();
   db.collection("rooms").find({}, { limit: 1, sort: { roomId: -1 } }).toArray(function (err, rooms) {
-    console.log(rooms);
     var roomId;
     if (rooms.length !== 0) {
       var room = rooms[0];
@@ -65,17 +63,13 @@ app.post("/createRoom", function (req, res) {
       roomId = 1;
     }
     db.collection("rooms").insert({ roomId: roomId, gameState: newGame }, function (err, inserted) {
-      console.log(inserted);
       res.json({ roomId: roomId });
     });
   });
 });
 
 app.get("/joinRoom", function (req, res) {
-  console.log("Joining a room!");
-  console.log(req.query);
   var roomId = parseInt(req.query.roomId, 10);
-  console.log("Joining room " + roomId);
   db.collection("rooms").findOne({ roomId: roomId}, function (err, room) {
     if (room) {
       res.render("player", { room: roomId });
@@ -93,7 +87,6 @@ io.sockets.on("connection", function (socket) {
   });
   socket.on("start game", function (room) {
     var roomId = parseInt(room, 10);
-    console.log("Starting game for room: "+roomId);
     db.collection("rooms").findOne({ roomId: roomId }, function (err, roomObj) {
       if (roomObj) {
         var gameState = roomObj.gameState;
@@ -114,10 +107,15 @@ io.sockets.on("connection", function (socket) {
     });
   });
   socket.on("joinRoom", function (data) {
-    var room = data.room;
+    var roomId = parseInt(data.room, 10);
     var playerId = data.playerId;
-    console.log("Joining room: "+ room);
-    socket.join(room);
+    db.collection("rooms").findOne({ roomId: roomId}, function (err, room) {
+      var game = room.gameState;
+      hearts.Game.addPlayer(game,playerId);
+      db.collection("rooms").update({ roomId: roomId }, room, {}, function (err, room) {
+        socket.join(roomId);
+      });
+    });
   });
 });
 

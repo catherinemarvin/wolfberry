@@ -18,6 +18,11 @@
     console.log("Game starting: player");
   });
 
+  socket.on("failure", function (data) {
+    console.log("Failed!");
+    console.log(data);
+  });
+
   var displayHand = function (cards) {
     $("#hand").show();
   };
