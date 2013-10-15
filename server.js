@@ -36,6 +36,7 @@ app.get("/about", function (req, res) {
 app.get("/room/:roomId", function (req, res) {
   var roomId = parseInt(req.params.roomId, 10);
   db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
+    console.log("get room");
     console.log(room);
     if (!room) {
       console.log("This room doesn't exist!");
@@ -109,9 +110,12 @@ io.sockets.on("connection", function (socket) {
   socket.on("joinRoom", function (data) {
     var roomId = parseInt(data.room, 10);
     var playerId = data.playerId;
+    var boardId = data.boardId;
     db.collection("rooms").findOne({ roomId: roomId}, function (err, room) {
-      var game = room.gameState;
-      hearts.Game.addPlayer(game,playerId);
+      if (playerId) {
+        var game = room.gameState;
+        hearts.Game.addPlayer(game,playerId);
+      }
       db.collection("rooms").update({ roomId: roomId }, room, {}, function (err, room) {
         socket.join(roomId);
       });
