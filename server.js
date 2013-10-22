@@ -4,7 +4,7 @@ var server = require("http").createServer(app);
 var io = require("socket.io").listen(server);
 var engine = require("ejs-locals");
 var hearts = require("./hearts");
-io.set("log level", 1);
+io.set("log level", 3);
 
 // Mongodb configuration
 
@@ -105,6 +105,17 @@ io.sockets.on("connection", function (socket) {
       else {
         console.log("Couldn't find a room");
       }
+    });
+  });
+  socket.on("boardJoinRoom", function (data) {
+    var roomId = parseInt(data, 10);
+    db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
+      if (!room) {
+        console.log("This room doesn't exist!");
+        roomId = null;
+      }
+      console.log("beep boop");
+      socket.emit("boardJoinRoomConfirmation", roomId);
     });
   });
   socket.on("joinRoom", function (data) {
