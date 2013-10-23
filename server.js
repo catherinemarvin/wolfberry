@@ -8,8 +8,13 @@ io.set("log level", 3);
 
 // Mongodb configuration
 
-var mongo = require("mongoskin");
-var db = mongo.db("localhost:27017/wolfberry?auto_reconnect", { safe: true });
+var mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost:27017/wolfberry")
+var db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", function () {
+  console.log("open!");
+});
 
 // Express configuration
 
