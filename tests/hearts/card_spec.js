@@ -4,14 +4,15 @@ var hearts = require("../../hearts/");
 describe("Cards", function () {
   describe("initialization", function () {
     it("should correctly set values and suits", function () {
-      newCard = new hearts.Card(5, "spades");
-      newCard.value.should.equal(5);
-      newCard.suit.should.equal("spades");
+      newCard = new hearts.Card({ value: 5, suit: "spades"});
+      newCard.get("value").should.equal(5);
+      newCard.get("suit").should.equal("spades");
     });
     it("should disallow improper values and suits", function () {
-      (function () {
-        badCard = new hearts.Card(5, "bananas");
-      }).should.throwError("Invalid arguments to Card given");
+      badCard = new hearts.Card({ value: 5, suit: "bananas"});
+      badCard.validate(function (err) {
+        err.should.not.be.empty
+      });
     });
   });
 });
