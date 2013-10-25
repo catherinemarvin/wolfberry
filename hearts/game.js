@@ -1,28 +1,47 @@
 var Player = require("./player").Player;
 var Deck = require("./deck").Deck;
 
-var Game = function () {
-  this.players = [];
-  this.currentTrick = [];
-  this.penaltyCardPlayed = false;
-  this.firstTrick = [];
-  this.currentPlayer = null;
+var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
+
+var gameSchema = new Schema({
+  players: Array,
+  currentTrick: Array,
+  penaltyCardPlayed: Boolean,
+  firstTrick: Array,
+  currentPlayer: Schema.Types.Mixed,
+  deck: Schema.Types.Mixed
+});
+
+gameSchema.methods.prepare = function () {
   this.deck = new Deck();
-  return this;
 };
 
-Game.addPlayer = function (game, player) {
-  game.players.push(player);
-};
+gameSchema.methods.addPlayer = function (player) {
+  var players = this.get("players");
 
-Game.prototype.addPlayer = function (player) {
-  if (this.players.indexOf(player) != -1) {
+  if (players.indexOf(player) != -1) {
     throw new Error("You're trying to add a player that's already here!");
   }
-  if (this.players.map(function (x) { return x.position; }).indexOf(player.position) != -1) {
+  if (players.map(function (x) { return x.get("position"); }).indexOf(player.get("position")) != -1) {
     throw new Error("You're trying to add a player in the same position");
   }
-  this.players.push(player);
+
+  players.push(player);
+  this.set("players", players);
+};
+
+gameSchema.methods.startGame = function () {
+  var players = this.get("players");
+
+  if (players.length != 4) {
+    throw new Error("You can't start a game unless you have four players");
+  }
+
+  var currentPlayerId = 0;
+
+  var deck = this.get("deck");
+  var cards = this.get("cards");
 };
 
 Game.prototype.startGame = function () {
