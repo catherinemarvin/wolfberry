@@ -41,18 +41,13 @@ gameSchema.methods.startGame = function () {
   var currentPlayerId = 0;
 
   var deck = this.get("deck");
-  var cards = this.get("cards");
-};
+  var cards = deck.get("cards");
 
-Game.prototype.startGame = function () {
-  if (this.players.length != 4) {
-    throw new Error("You can't start a game unless you have four players");
-  }
   var currentPlayerId = 0;
-  while (this.deck.cards.length > 0) {
-    card = this.deck.cards.shift();
-    this.players[currentPlayerId].receiveCard(card);
-    if (currentPlayerId < this.players.length - 1) {
+
+  while (cards.length > 0) {
+    players[currentPlayerId].receiveCard(deck.dealCard());
+    if (currentPlayerId < players.length - 1) {
       currentPlayerId++;
     }
     else {
@@ -61,20 +56,16 @@ Game.prototype.startGame = function () {
   }
 };
 
-Game.prototype.playedCard = function (player, card) {
-  if (this.currentTrick.length >= this.players.length) {
-    throw new Error("You're trying to play more cards on this trick than the number of players");
-  }
-  if (this.currentTrick.indexOf(card) != -1) {
-    throw new Error("You're trying to play a card that's already been played");
-  }
-
-  this.currentTrick.push(card);
+gameSchema.methods.playedCard = function (card) {
+  var currentTrick = this.get("currentTrick");
+  currentTrick.push(card);
+  this.set(currentTrick, currentTrick);
   return true;
 };
 
-Game.prototype.scoreRound = function () {
-  for (var i = 0; i < this.players.length; i++) {
+gameSchema.methods.scoreRound = function () {
+  var players = this.get("players");
+  for (var i = 0; i < players.length; i++) {
     players[i].scoreTricks();
   }
 };
