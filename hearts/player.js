@@ -1,16 +1,21 @@
-var Player = function (name, position) {
-  this.name = name;
-  this.position = position;
-  this.hand = [];
-  this.tricks = [];
-  this.game = null;
-  this.score = 0;
+var mongoose = require("mongoose");
+var Schema = mongoose.Schema;
 
-  return this;
+var playerSchema = new Schema({
+  name: String,
+  position: String,
+  hand: [{ type: Schema.Types.ObjectId, ref: "Card" }],
+  tricks: [{ type: Schema.Types.ObjectId, ref: "Card" }],
+  game: { type: Schema.Types.ObjectId, ref: "Game" },
+  score: Number
+});
+
+playerSchema.methods.receiveCard = function (card) {
+  var hand = this.get("hand");
+  hand.push(card);
 };
 
-Player.prototype.receiveCard = function (card) {
-  this.hand.push(card);
+playerSchema.methods.playCard = function (card) {
 };
 
 Player.prototype.playCard = function (card) {

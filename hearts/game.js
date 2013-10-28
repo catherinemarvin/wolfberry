@@ -5,12 +5,12 @@ var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 
 var gameSchema = new Schema({
-  players: Array,
+  players: [{ type: Schema.Types.ObjectId, ref: "Player" }],
   currentTrick: Array,
   penaltyCardPlayed: Boolean,
   firstTrick: Array,
-  currentPlayer: Schema.Types.Mixed,
-  deck: Schema.Types.Mixed
+  currentPlayer: { type: Schema.Types.ObjectId, ref: "Player" },
+  deck: { type: Schema.Types.ObjectId, ref: "Deck" }
 });
 
 gameSchema.methods.prepare = function () {
@@ -69,5 +69,7 @@ gameSchema.methods.scoreRound = function () {
     players[i].scoreTricks();
   }
 };
+
+var Game = mongoose.model("Game", gameSchema);
 
 module.exports.Game = Game;

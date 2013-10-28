@@ -3,9 +3,10 @@ var VALUES = [1,2,3,4,5,6,7,8,9,10,11,12,13];
 
 var mongoose = require("mongoose");
 var Card = require("./card").Card;
+var Schema = mongoose.Schema;
 
-var deckSchema = new mongoose.Schema({
-  cards: Array
+var deckSchema = new Schema({
+  cards: [{ type: Schema.Types.ObjectId, ref: "Card" }]
 });
 
 deckSchema.methods.prepare = function () {
