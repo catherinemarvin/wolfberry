@@ -16,23 +16,21 @@ playerSchema.methods.receiveCard = function (card) {
 };
 
 playerSchema.methods.playCard = function (card) {
-};
+  var cards = this.get("hand");
 
-Player.prototype.playCard = function (card) {
   var index = this.hand.indexOf(card);
+
   if (index == -1) {
     throw new Error("Tried to play a card not in your hand!");
   }
 
-  // Logic about whether or not this card is a legal move.
-
-  ledCard = this.game.currentTrick[0];
+  var ledCard = this.get("game").currentTrick[0];
 
   if (ledCard) {
-    var ledSuit = ledCard.suit;
-    if (card.suit !== ledSuit) {
-      matchingSuitCards = this.hand.filter(function (card) {
-        return card.suit === ledSuit;
+    var ledSuit = ledCard.get("suit");
+    if (card.get("suit") !== ledSuit) {
+      matchingSuitCards = this.get("hand").filter(function (card) {
+        return card.get("suit") === ledSuit;
       });
       if (matchingSuitCards.length !== 0) {
         throw new Error("You must follow suit if you can!");
@@ -40,32 +38,38 @@ Player.prototype.playCard = function (card) {
     }
   }
   else { // you are the first card to lead
-    if (card.suit === "hearts" && this.game.penaltyCardPlayed !== true) {
+    if (card.get("suit") === "hearts" && this.get("game").penaltyCardPlayed !== true) {
       throw new Error("You can't lead Hearts until it has been broken");
     }
   }
-  this.hand.splice(index, 1);
+  var hand = this.get("hand");
+  hand.splice(index, 1);
+  this.set("hand", hand);
 };
 
-Player.prototype.scoreTricks = function () {
-  var newScore = this.tricks.reduce(function (prev, current) {
-    if (current.suit === "hearts") {
+playerSchema.methods.playCard = function () {
+  var newScore = this.get("tricks").reduce(function (prev, current) {
+    if (current.get("suit") === "hearts") {
       return prev + 1;
     }
-    else if (current.suit === "spades" && current.value === 12) {
+    else if (current.suit === "spades" && current.get("value") === 12) {
       return prev + 13;
     }
     else return prev;
   }, 0);
-  this.score = newScore + this.score;
+  this.set("score", newScore + this.get("score"));
 };
 
-Player.prototype.takeTrick = function (trick) {
-  this.tricks = this.tricks.concat(trick);
+playerSchema.methods.takeTrick = function (trick) {
+  var tricks = this.get("tricks");
+  tricks.concat(trick);
+  this.set("tricks", tricks);
 };
 
-Player.prototype.joinGame = function (game) {
-  this.game = game;
+playerSchema.methods.joinGame = function (game) {
+  this.set("game", game);
 };
+
+var Player = mongoose.model("Player", playerSchema);
 
 module.exports.Player = Player;
