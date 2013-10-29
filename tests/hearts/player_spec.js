@@ -14,22 +14,18 @@ describe("Player", function () {
 
       player.hand.length.should.equal(2);
 
-      console.log(player.hand);
-      console.log(card1);
-
-      player.hand.indexOf(card1).should.not.equal(-1);
-      player.hand.indexOf(card2).should.not.equal(-1);
+      should.exist(player.hand.id(card1._id));
+      should.exist(player.hand.id(card2._id));
     });
   });
 
   describe("#playCard", function () {
     beforeEach(function () {
-      player = new hearts.Player("Twilight", "north");
-      card1 = new hearts.Card(5, "spades");
-      card2 = new hearts.Card(10, "hearts");
+      player = new hearts.Player({ name: "Twilight", position: "north" });
+      card1 = new hearts.Card({ value: 5, suit: "spades" });
+      card2 = new hearts.Card({ value: 10, suit: "hearts" });
       game = new hearts.Game();
       player.joinGame(game);
-
     });
 
     it("should let you play cards in your hand and also remove them", function () {
