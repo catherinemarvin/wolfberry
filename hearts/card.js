@@ -6,4 +6,6 @@ var cardSchema = new mongoose.Schema({
 
 var Card = mongoose.model("Card", cardSchema);
 
+module.exports.cardSchema = cardSchema;
+
 module.exports.Card = Card;

@@ -4,15 +4,19 @@ var hearts = require("../../hearts/");
 describe("Player", function () {
   describe("#receiveCard", function () {
     it("should let you receive cards and add them to your hand", function () {
-      var player = new hearts.Player("Twilight", "north");
-      var card1 = new hearts.Card(5, "spades");
-      var card2 = new hearts.Card(10, "hearts");
+      var player = new hearts.Player({ name: "Twilight", position: "north" });
+      var card1 = new hearts.Card({ value: 5, suit: "spades" });
+      var card2 = new hearts.Card({ value: 10, suit: "hearts" });
       player.hand.indexOf(card1).should.equal(-1);
 
       player.receiveCard(card1);
       player.receiveCard(card2);
 
       player.hand.length.should.equal(2);
+
+      console.log(player.hand);
+      console.log(card1);
+
       player.hand.indexOf(card1).should.not.equal(-1);
       player.hand.indexOf(card2).should.not.equal(-1);
     });

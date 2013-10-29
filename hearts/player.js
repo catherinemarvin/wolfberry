@@ -1,10 +1,12 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
+var cardSchema = require("./card").cardSchema;
 
 var playerSchema = new Schema({
   name: String,
   position: String,
-  hand: [{ type: Schema.Types.ObjectId, ref: "Card" }],
+  hand: [cardSchema],
+  //hand: [{ type: Schema.Types.ObjectId, ref: "Card" }],
   tricks: [{ type: Schema.Types.ObjectId, ref: "Card" }],
   game: { type: Schema.Types.ObjectId, ref: "Game" },
   score: Number
