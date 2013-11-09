@@ -91,10 +91,13 @@ io.sockets.on("connection", function (socket) {
     db.collection("rooms").findOne({ roomId: roomId }, function (err, roomObj) {
       if (roomObj) {
         var gameState = roomObj.gameState;
+        gameState.__proto__ = hearts.Game.prototype;
+        console.log(gameState);
         try {
-          gameState.start();
+          gameState.startGame();
         }
         catch (e) {
+          console.log(e);
           io.sockets['in'](room).emit("failure", e);
         }
         roomObj.gameStarted = true;
@@ -125,7 +128,10 @@ io.sockets.on("connection", function (socket) {
     db.collection("rooms").findOne({ roomId: roomId}, function (err, room) {
       if (playerId) {
         var game = room.gameState;
-        hearts.Game.addPlayer(game,playerId);
+        game.__proto__ = hearts.Game.prototype;
+
+        var player = new hearts.Player(playerId, "north");
+        game.addPlayer(game,playerId);
       }
       db.collection("rooms").update({ roomId: roomId }, room, {}, function (err, room) {
         socket.join(roomId);
