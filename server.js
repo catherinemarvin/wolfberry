@@ -130,7 +130,7 @@ io.sockets.on("connection", function (socket) {
         var game = room.gameState;
         game.__proto__ = hearts.Game.prototype;
 
-        var player = new hearts.Player(playerId, "north");
+        var player = new hearts.Player(playerId);
         game.addPlayer(game,playerId);
       }
       db.collection("rooms").update({ roomId: roomId }, room, {}, function (err, room) {

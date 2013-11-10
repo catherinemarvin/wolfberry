@@ -28,6 +28,12 @@ describe("Game", function () {
         game.addPlayer(player2);
       }).should.throwError("You're trying to add a player in the same position");
     });
+    it("should let you add a position-less player and put him in a place", function () {
+      var game = new hearts.Game();
+      var player1 = new hearts.Player("John");
+      game.addPlayer(player1);
+      player1.position.should.not.equal(undefined);
+    });
   });
   describe("#startGame", function () {
     it("should set the game up properly", function () {

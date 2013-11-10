@@ -18,6 +18,14 @@ Game.prototype.addPlayer = function (player) {
   if (this.players.map(function (x) { return x.position; }).indexOf(player.position) != -1) {
     throw new Error("You're trying to add a player in the same position");
   }
+
+  var self = this;
+  if (player.position === undefined) {
+    var suits = ["north", "south", "east", "west"];
+    player.position = suits.filter(function (suit) {
+      return self.players.map(function (p) { return p.position; }).indexOf(suits) === -1;
+    })[0];
+  }
   this.players.push(player);
 };
 
