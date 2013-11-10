@@ -1,18 +1,41 @@
 <% layout("layout") -%>
 <script src="/socket.io/socket.io.js"></script>
-<script src="js/index.js"></script>
 <script>
   var socket = io.connect("http://localhost");
   socket.on("news", function (data) {
     console.log(data);
     socket.emit("my other event", { my: "data" });
   });
+  socket.on("boardJoinRoomConfirmation", function (data) {
+    console.log("Hi");
+    if (data) {
+      window.location.href = "/room/" + data;
+    }
+    else {
+      console.log("room doesn't exist");
+    }
+  });
+
+  $(document).ready(function () {
+    $("#openRoomBtn").click(function () {
+      $.post("createRoom", function (data) {
+        console.log(data);
+        window.location.href = "/room/" + data.roomId;
+        });
+      });
+
+    $("#joinRoom").click(function () {
+      var roomNum = $("#roomId").val();
+      console.log("join room click");
+      socket.emit("boardJoinRoom", roomNum);
+    });
+  });
 </script>
 
 <div class="jumbotron">
   <h1>Put your phones to good use!</h1>
   <p class="lead">Just accept the fact that phones have become a part of social interaction and use them to bond.</p>
-  <div id="openRoomBtn" class="btn btn-large btn-success">Open a room</div>
+  <div id="openRoomBtn" class="btn btn-large btn-success">Open a new room</div>
 </div>
 
 <div>

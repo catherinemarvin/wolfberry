@@ -36,6 +36,7 @@ app.get("/about", function (req, res) {
 app.get("/room/:roomId", function (req, res) {
   var roomId = parseInt(req.params.roomId, 10);
   db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
+    console.log("get room");
     console.log(room);
     if (!room) {
       console.log("This room doesn't exist!");
@@ -90,10 +91,13 @@ io.sockets.on("connection", function (socket) {
     db.collection("rooms").findOne({ roomId: roomId }, function (err, roomObj) {
       if (roomObj) {
         var gameState = roomObj.gameState;
+        gameState.__proto__ = hearts.Game.prototype;
+        console.log(gameState);
         try {
-          gameState.start();
+          gameState.startGame();
         }
         catch (e) {
+          console.log(e);
           io.sockets['in'](room).emit("failure", e);
         }
         roomObj.gameStarted = true;
@@ -106,12 +110,29 @@ io.sockets.on("connection", function (socket) {
       }
     });
   });
+  socket.on("boardJoinRoom", function (data) {
+    var roomId = parseInt(data, 10);
+    db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
+      if (!room) {
+        console.log("This room doesn't exist!");
+        roomId = null;
+      }
+      console.log("beep boop");
+      socket.emit("boardJoinRoomConfirmation", roomId);
+    });
+  });
   socket.on("joinRoom", function (data) {
     var roomId = parseInt(data.room, 10);
     var playerId = data.playerId;
+    var boardId = data.boardId;
     db.collection("rooms").findOne({ roomId: roomId}, function (err, room) {
-      var game = room.gameState;
-      hearts.Game.addPlayer(game,playerId);
+      if (playerId) {
+        var game = room.gameState;
+        game.__proto__ = hearts.Game.prototype;
+
+        var player = new hearts.Player(playerId, "north");
+        game.addPlayer(game,playerId);
+      }
       db.collection("rooms").update({ roomId: roomId }, room, {}, function (err, room) {
         socket.join(roomId);
       });
