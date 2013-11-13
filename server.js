@@ -123,15 +123,13 @@ io.sockets.on("connection", function (socket) {
   });
   socket.on("joinRoom", function (data) {
     var roomId = parseInt(data.room, 10);
-    var playerId = data.playerId;
-    var boardId = data.boardId;
     db.collection("rooms").findOne({ roomId: roomId}, function (err, room) {
       if (playerId) {
         var game = room.gameState;
         game.__proto__ = hearts.Game.prototype;
 
-        var player = new hearts.Player(playerId);
-        game.addPlayer(game,playerId);
+        var player = new hearts.Player(socket.id);
+        game.addPlayer(player);
       }
       db.collection("rooms").update({ roomId: roomId }, room, {}, function (err, room) {
         socket.join(roomId);
@@ -139,7 +137,7 @@ io.sockets.on("connection", function (socket) {
     });
   });
   socket.on("disconnect", function () {
-    console.log("leaving");
+    console.log(socket.id);
   });
 });
 
