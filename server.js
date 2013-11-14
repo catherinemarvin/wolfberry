@@ -124,15 +124,19 @@ io.sockets.on("connection", function (socket) {
   socket.on("joinRoom", function (data) {
     var roomId = parseInt(data.room, 10);
     db.collection("rooms").findOne({ roomId: roomId}, function (err, room) {
-      if (playerId) {
+      if (room) {
         var game = room.gameState;
         game.__proto__ = hearts.Game.prototype;
 
         var player = new hearts.Player(socket.id);
         game.addPlayer(player);
+        player.game = game;
       }
       db.collection("rooms").update({ roomId: roomId }, room, {}, function (err, room) {
         socket.join(roomId);
+        db.collection("players").insert({ playerId: socket.id, player: player }, function (err, inserted) {
+          console.log("player inserted");
+        });
       });
     });
   });
