@@ -39,7 +39,7 @@ app.get("/room/:roomId", function (req, res) {
     console.log("get room");
     console.log(room);
     if (!room) {
-      console.log("This room doesn't exist!");
+      res.redirect("/");
     }
 
     var userAgent = req.header("user-agent");
