@@ -36,8 +36,6 @@ app.get("/about", function (req, res) {
 app.get("/room/:roomId", function (req, res) {
   var roomId = parseInt(req.params.roomId, 10);
   db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
-    console.log("get room");
-    console.log(room);
     if (!room) {
       res.redirect("/");
     }
@@ -142,13 +140,9 @@ io.sockets.on("connection", function (socket) {
       db.collection("rooms").update({ roomId: roomId }, room, {}, function (err, room) {
         socket.join(roomId);
         db.collection("players").insert({ playerId: socket.id, player: player }, function (err, inserted) {
-          console.log("player inserted");
         });
       });
     });
-  });
-  socket.on("disconnect", function () {
-    console.log(socket.id);
   });
 });
 
