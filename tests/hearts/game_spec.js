@@ -61,6 +61,23 @@ describe("Game", function () {
         game.startGame();
       }).should.throwError("You can't start a game unless you have four players");
     });
+    it("should not start a game that has already started", function () {
+      var game = new hearts.Game();
+      var player1 = new hearts.Player("Twilight", "north");
+      var player2 = new hearts.Player("Rainbow", "west");
+      var player3 = new hearts.Player("Rarity", "south");
+      var player4 = new hearts.Player("Fluttershy", "east");
+
+      game.addPlayer(player1);
+      game.addPlayer(player2);
+      game.addPlayer(player3);
+      game.addPlayer(player4);
+
+      game.startGame();
+      (function () {
+        game.startGame();
+      }).should.throwError("You can't start a game that has already started");
+    });
   });
   describe("#playedCard", function () {
     it("should let you play a legal card", function () {

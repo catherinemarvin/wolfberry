@@ -7,6 +7,7 @@ var Game = function () {
   this.penaltyCardPlayed = false;
   this.firstTrick = [];
   this.currentPlayer = null;
+  this.started = false;
   this.deck = new Deck();
   return this;
 };
@@ -33,6 +34,11 @@ Game.prototype.startGame = function () {
   if (this.players.length != 4) {
     throw new Error("You can't start a game unless you have four players");
   }
+
+  if (this.started) {
+    throw new Error("You can't start a game that has already started");
+  }
+
   var currentPlayerId = 0;
   while (this.deck.cards.length > 0) {
     card = this.deck.cards.shift();
@@ -46,6 +52,7 @@ Game.prototype.startGame = function () {
   }
   randomInt = Math.floor(Math.random() * 4);
   this.currentPlayer = this.players[randomInt];
+  this.started = true;
 };
 
 Game.prototype.playedCard = function (player, card) {
