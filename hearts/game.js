@@ -44,6 +44,8 @@ Game.prototype.startGame = function () {
       currentPlayerId = 0;
     }
   }
+  randomInt = Math.floor(Math.random() * 4);
+  this.currentPlayer = this.players[randomInt];
 };
 
 Game.prototype.playedCard = function (player, card) {
