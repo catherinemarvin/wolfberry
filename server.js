@@ -92,7 +92,11 @@ io.sockets.on("connection", function (socket) {
       if (roomObj) {
         var gameState = roomObj.gameState;
         gameState.__proto__ = hearts.Game.prototype;
-        console.log(gameState);
+
+        for (var i = 0; i < gameState.players.length; i++) {
+          var player = gameState.players[i];
+          player.__proto__ = hearts.Player.prototype;
+        }
         try {
           gameState.startGame();
         }
