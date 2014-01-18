@@ -82,10 +82,6 @@ app.get("/joinRoom", function (req, res) {
 });
 
 io.sockets.on("connection", function (socket) {
-  socket.emit("news", { hello: "world!" });
-  socket.on("my other event", function (data) {
-    console.log(data);
-  });
   socket.on("start game", function (room) {
     var roomId = parseInt(room, 10);
     db.collection("rooms").findOne({ roomId: roomId }, function (err, roomObj) {
