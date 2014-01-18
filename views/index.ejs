@@ -6,8 +6,8 @@
     console.log(data);
     socket.emit("my other event", { my: "data" });
   });
+
   socket.on("boardJoinRoomConfirmation", function (data) {
-    console.log("Hi");
     if (data) {
       window.location.href = "/room/" + data;
     }
@@ -26,8 +26,7 @@
 
     $("#joinRoom").click(function () {
       var roomNum = $("#roomId").val();
-      console.log("join room click");
-      socket.emit("boardJoinRoom", roomNum);
+      socket.emit("boardCheckAndJoinRoom", roomNum);
     });
   });
 </script>

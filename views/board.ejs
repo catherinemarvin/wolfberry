@@ -10,7 +10,7 @@
   var room = pathname.split("/")[2];
 
   var boardId = uuid.v4();
-  socket.emit("joinRoom", { room: room, boardId: boardId });
+  socket.emit("boardJoinRoom", { room: room });
 
   socket.on("gameStart", function (data) {
     console.log("Game starting: board");

@@ -110,20 +110,28 @@ io.sockets.on("connection", function (socket) {
       }
     });
   });
-  socket.on("boardJoinRoom", function (data) {
+  socket.on("boardCheckAndJoinRoom", function (data) {
     var roomId = parseInt(data, 10);
     db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
       if (!room) {
         console.log("This room doesn't exist!");
         roomId = null;
       }
-      console.log("beep boop");
       socket.emit("boardJoinRoomConfirmation", roomId);
     });
   });
+  socket.on("boardJoinRoom", function (data) {
+    var roomId = parseInt(data.room, 10);
+    db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
+      if (room) {
+        socket.join(roomId);
+      }
+    });
+  });
+
   socket.on("joinRoom", function (data) {
     var roomId = parseInt(data.room, 10);
-    db.collection("rooms").findOne({ roomId: roomId}, function (err, room) {
+    db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
       if (room) {
         var game = room.gameState;
         game.__proto__ = hearts.Game.prototype;
