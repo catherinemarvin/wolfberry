@@ -100,11 +100,33 @@ io.sockets.on("connection", function (socket) {
         }
         roomObj.gameStarted = true;
         db.collection("rooms").update({ roomId: roomId }, roomObj, {}, function (err, room) {
-          console.log(io.sockets.clients(room));
           for (var i = 0; i < gameState.players.length; i++) {
             var player = gameState.players[i];
             io.sockets.socket(player.name).emit("gameStart", player.hand);
           }
+
+          var playerSocketIds = gameState.players.map(function (player) {
+            return player.name;
+          });
+
+          var roomSocketIds = io.sockets.clients(room).map(function (client) {
+            return client.id;
+          });
+
+          for (var i = 0; i < roomSocketIds.length; i++) {
+            var client = roomSocketIds[i];
+            var playerIndex = playerSocketIds.indexOf(client);
+            if (playerIndex >= 0) {
+              var player = gameState.players[playerIndex];
+              io.sockets.socket(player.name).emit("gameStart", player.hand);
+            }
+            else {
+              io.sockets.socket(client).emit("boardGameStart", gameState);
+            }
+          }
+
+          console.log(playerSocketIds);
+          console.log(roomSocketIds);
         });
       }
       else {

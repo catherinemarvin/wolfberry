@@ -12,8 +12,9 @@
   var boardId = uuid.v4();
   socket.emit("boardJoinRoom", { room: room });
 
-  socket.on("gameStart", function (data) {
+  socket.on("boardGameStart", function (data) {
     console.log("Game starting: board");
+    console.log(data);
   });
 
   socket.on("failure", function (data) {
