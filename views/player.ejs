@@ -23,7 +23,7 @@
   });
 
   var displayHand = function (cards) {
-    console.log(cards);
+    sortCards(cards);
     for (var i = 0; i < cards.length; i++) {
       var card = cards[i];
       var suit = card.suit;
@@ -33,6 +33,30 @@
 
       $("#hand").append("<img width='69px' height='100px' src='"+cardImageUrl+"'></img>");
     }
+  };
+
+  // destructive
+  var sortCards = function (cards) {
+    return cards.sort(function (card1, card2) {
+      var suitRankings = ["clubs", "diamonds", "spades", "hearts"];
+      var card1SuitRank = suitRankings.indexOf(card1.suit);
+      var card2SuitRank = suitRankings.indexOf(card2.suit);
+
+      if (card1SuitRank < card2SuitRank) {
+        return -1;
+      }
+      else if (card2SuitRank < card1SuitRank) {
+        return 1;
+      }
+      else { // otherwise they have the same suit
+        if (card1.value > card2.value) {
+          return 1;
+        } 
+        else { // it is impossible for two cards to be equal
+          return -1;
+        }
+      }
+    });
   };
 </script>
 

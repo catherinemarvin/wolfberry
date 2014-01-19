@@ -124,9 +124,6 @@ io.sockets.on("connection", function (socket) {
               io.sockets.socket(client).emit("boardGameStart", gameState);
             }
           }
-
-          console.log(playerSocketIds);
-          console.log(roomSocketIds);
         });
       }
       else {
