@@ -24,7 +24,15 @@
 
   var displayHand = function (cards) {
     console.log(cards);
-    $("#hand").show();
+    for (var i = 0; i < cards.length; i++) {
+      var card = cards[i];
+      var suit = card.suit;
+      var value = card.value;
+
+      var cardImageUrl = "/images/cards/" + value + "_of_" + suit + ".png";
+
+      $("#hand").append("<img width='69px' height='100px' src='"+cardImageUrl+"'></img>");
+    }
   };
 </script>
 
@@ -33,5 +41,4 @@
 </div>
 
 <div id="hand">
-  I've got a hand!
 </div>
