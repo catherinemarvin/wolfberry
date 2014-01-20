@@ -1,6 +1,42 @@
 #gameBoard {
-  display: none;
+  position: absolute;
   height: 500px;
   width: 500px;
   background: green;
+}
+
+#north {
+  position: absolute;
+  background: red;
+  height: 100px;
+  width: 100px;
+  left: 200px;
+}
+
+#east {
+  position: absolute;
+  background: orange;
+  height: 100px;
+  width: 100px;
+  right: 0px;
+  top: 200px;
+}
+
+#south {
+  position: absolute;
+  background: yellow;
+  height: 100px;
+  width: 100px;
+  margin: 0 auto;
+  bottom: 0;
+  left: 200px;
+}
+
+#west {
+  position: absolute;
+  background: blue;
+  height: 100px;
+  width: 100px;
+  left: 0;
+  top: 200px;
 }
