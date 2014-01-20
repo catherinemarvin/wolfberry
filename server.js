@@ -100,11 +100,6 @@ io.sockets.on("connection", function (socket) {
         }
         roomObj.gameStarted = true;
         db.collection("rooms").update({ roomId: roomId }, roomObj, {}, function (err, room) {
-          for (var i = 0; i < gameState.players.length; i++) {
-            var player = gameState.players[i];
-            io.sockets.socket(player.name).emit("gameStart", player.hand);
-          }
-
           var playerSocketIds = gameState.players.map(function (player) {
             return player.name;
           });
