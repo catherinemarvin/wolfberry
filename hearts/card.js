@@ -1,5 +1,5 @@
 var SUITS = ["clubs", "hearts", "spades", "diamonds"];
-var VALUES = [1,2,3,4,5,6,7,8,9,10,11,12,13];
+var VALUES = [2,3,4,5,6,7,8,9,10,11,12,13,14]; // aces are high
 
 var Card = function (value, suit) {
   if (SUITS.indexOf(suit) == -1 || VALUES.indexOf(value) == -1) {
