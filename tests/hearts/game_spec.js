@@ -33,6 +33,12 @@ describe("Game", function () {
       var player1 = new hearts.Player("John");
       game.addPlayer(player1);
       player1.position.should.not.equal(undefined);
+
+      var player2 = new hearts.Player("Twilight");
+      game.addPlayer(player2);
+      player2.position.should.not.equal(undefined);
+
+      player1.position.should.not.equal(player2.position);
     });
   });
   describe("#startGame", function () {
