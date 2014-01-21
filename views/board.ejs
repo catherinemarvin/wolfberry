@@ -15,8 +15,6 @@
 
   socket.on("boardGameStart", function (data) {
     console.log(data);
-
-    setGameState(data);
     $("#gameBoard").show();
   });
 
@@ -30,16 +28,6 @@
       socket.emit("start game", room);
     });
   });
-
-  var setGameState = function (gameState) {
-    var players = gameState.players;
-    console.log(players);
-    for (var i = 0; i < players.length; i++) {
-      var player = players[i];
-      console.log(player);
-      $("#"+player.position).text(player.name);
-    }
-  };
 </script>
 
 <div>This is the board view.
@@ -49,8 +37,8 @@ Room: <%- room %>
 <button id="startGame" type="button" class="btn btn-primary">Start Game</button>
 
 <div id="gameBoard">
-  <div id="north"></div>
-  <div id="east"></div>
-  <div id="south"></div>
-  <div id="west"></div>
+  <div id="north">North</div>
+  <div id="east">East</div>
+  <div id="south">South</div>
+  <div id="west">West</div>
 </div>
