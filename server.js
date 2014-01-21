@@ -113,7 +113,7 @@ io.sockets.on("connection", function (socket) {
             var playerIndex = playerSocketIds.indexOf(client);
             if (playerIndex >= 0) {
               var player = gameState.players[playerIndex];
-              io.sockets.socket(player.name).emit("gameStart", player.hand);
+              io.sockets.socket(player.name).emit("gameStart", player);
             }
             else {
               io.sockets.socket(client).emit("boardGameStart", gameState);

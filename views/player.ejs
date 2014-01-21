@@ -13,8 +13,9 @@
   var playerId = uuid.v4();
   socket.emit("joinRoom", { room: room, playerId: playerId });
 
-  socket.on("gameStart", function (data) {
-    displayHand(data);
+  socket.on("gameStart", function (player) {
+    $("#position").append("<b>"+player.position+"</b>");
+    displayHand(player.hand);
   });
 
   socket.on("failure", function (data) {
@@ -64,5 +65,6 @@
   <p>This is the player view.
 </div>
 
+<div id="position"></div>
 <div id="hand">
 </div>
