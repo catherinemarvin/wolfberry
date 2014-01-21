@@ -16,6 +16,10 @@
   socket.on("gameStart", function (player) {
     $("#position").append("<b>"+player.position+"</b>");
     displayHand(player.hand);
+    $("#status").text("Choose three cards to pass to the left");
+    $(".card").click(function () {
+      $(this).toggleClass("selected");
+    });
   });
 
   socket.on("failure", function (data) {
@@ -32,7 +36,7 @@
 
       var cardImageUrl = "/images/cards/" + value + "_of_" + suit + ".png";
 
-      $("#hand").append("<img width='69px' height='100px' src='"+cardImageUrl+"'></img>");
+      $("#hand").append("<img class='card' width='69px' height='100px' src='"+cardImageUrl+"'></img>");
     }
   };
 
@@ -66,5 +70,5 @@
 </div>
 
 <div id="position"></div>
-<div id="hand">
-</div>
+<div id="hand"></div>
+<div id="status"></div>
