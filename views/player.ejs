@@ -19,7 +19,15 @@
     $("#status").text("Choose three cards to pass to the left");
     $("#action").append("<button class='btn'>Pass</button>");
     $(".card").click(function () {
-      $(this).toggleClass("selected");
+      if ($(this).hasClass("selected")) {
+        $(this).removeClass("selected");
+      }
+      else {
+        var numSelected = $(".selected").length;
+        if (numSelected < 3) {
+          $(this).addClass("selected");
+        }
+      }
     });
   });
 
