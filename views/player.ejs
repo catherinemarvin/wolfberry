@@ -17,6 +17,7 @@
     $("#position").append("<b>"+player.position+"</b>");
     displayHand(player.hand);
     $("#status").text("Choose three cards to pass to the left");
+    $("#action").append("<button class='btn'>Pass</button>");
     $(".card").click(function () {
       $(this).toggleClass("selected");
     });
@@ -72,3 +73,4 @@
 <div id="position"></div>
 <div id="hand"></div>
 <div id="status"></div>
+<div id="action"></div>
