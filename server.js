@@ -162,6 +162,12 @@ io.sockets.on("connection", function (socket) {
       });
     });
   });
+
+  socket.on("passCards", function (data) {
+    console.log("Passed cards");
+    var cards = data.cards;
+    console.log(cards);
+  });
 });
 
 

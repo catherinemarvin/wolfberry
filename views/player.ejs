@@ -17,7 +17,7 @@
     $("#position").append("<b>"+player.position+"</b>");
     displayHand(player.hand);
     $("#status").text("Choose three cards to pass to the left");
-    $("#action").append("<button class='btn'>Pass</button>");
+    $("#action").append("<button class='btn pass'>Pass</button>");
     $(".card").click(function () {
       if ($(this).hasClass("selected")) {
         $(this).removeClass("selected");
@@ -29,7 +29,21 @@
         }
       }
     });
+    $(".pass").click(function () {
+      var selected = $(".selected")
+      if (selected.length == 3) {
+        var cards = [];
+        selected.each(function (index, el) {
+          var $el = $(el);
+          var suit = $el.data("suit");
+          var value = $el.data("value");
+          cards.push({ suit: suit, value: value });
+        });
+        socket.emit("passCards", { cards: cards })
+      }
+    });
   });
+
 
   socket.on("failure", function (data) {
     console.log("Failed!");
@@ -45,7 +59,7 @@
 
       var cardImageUrl = "/images/cards/" + value + "_of_" + suit + ".png";
 
-      $("#hand").append("<img class='card' width='69px' height='100px' src='"+cardImageUrl+"'></img>");
+      $("#hand").append("<img class='card' data-suit='"+suit+"' data-value='"+value+"' width='69px' height='100px' src='"+cardImageUrl+"'></img>");
     }
   };
 
