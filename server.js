@@ -163,13 +163,31 @@ io.sockets.on("connection", function (socket) {
     });
   });
 
+  // Don't bother storing the cards people want to pass in the DB, it can just live in memory.
+
+  // passCards looks like this;
+  // { roomId: { socketId: cards } }
   socket.on("passCards", function (data) {
     console.log("Passed cards");
+    console.log(passCards);
     var cards = data.cards;
-    console.log(cards);
+    var room = data.room;
+
+    var roomPasses = passCards[room];
+    if (!roomPasses) {
+      passCards[room] = {}
+      roomPasses = passCards[room];
+    }
+    roomPasses[socket.id] = cards;
+
+    if (Object.keys(roomPasses).length == 4) {
+      // We've received all the cards to be passed
+      console.log("Actually pass!");
+      console.log(roomPasses);
+    } else { console.log(roomPasses); }
   });
 });
 
-
+var passCards = {};
 server.listen(3000);
 console.log("Server started.");

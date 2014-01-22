@@ -39,7 +39,7 @@
           var value = $el.data("value");
           cards.push({ suit: suit, value: value });
         });
-        socket.emit("passCards", { cards: cards })
+        socket.emit("passCards", { room: room, cards: cards })
       }
     });
   });
