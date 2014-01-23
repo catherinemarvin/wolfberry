@@ -50,6 +50,11 @@
     console.log(data);
   });
 
+  socket.on("receiveCards", function (data) {
+    console.log("Receive cards");
+    console.log(data);
+  });
+
   var displayHand = function (cards) {
     sortCards(cards);
     for (var i = 0; i < cards.length; i++) {

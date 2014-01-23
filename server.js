@@ -182,11 +182,45 @@ io.sockets.on("connection", function (socket) {
 
     if (Object.keys(roomPasses).length == 4) {
       // We've received all the cards to be passed
-      console.log("Actually pass!");
+      console.log("Pass cards!");
+      console.log("Room passes");
       console.log(roomPasses);
-    } else { console.log(roomPasses); }
+      var roomId = parseInt(room, 10);
+      db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
+        var game = room.gameState;
+        game.__proto__ = hearts.Game.prototype;
+        console.log("Game state");
+        console.log(game);
+        var players = game.players;
+        for (var i = 0; i < players.length; i++) {
+          var player = players[i];
+          console.log("Player");
+          console.log(player);
+          player.__proto__ = hearts.Player.prototype;
+
+          var cardsToPass = roomPasses[player.name];
+          var positionToPassTo = leftPass[player.position];
+          var socketToPassTo = players.filter(function (player) {
+            return player.position === positionToPassTo;
+          })[0].name;
+
+          console.log("Pass to this socket");
+          console.log(socketToPassTo);
+
+          io.sockets.socket(socketToPassTo).emit("receiveCards", cardsToPass);
+        }
+      });
+    }
+    else { console.log(roomPasses); }
   });
 });
+
+var leftPass = {
+  north: "east",
+  east: "south",
+  south: "west",
+  west: "north"
+}
 
 var passCards = {};
 server.listen(3000);
