@@ -11,6 +11,8 @@
   var room = searchString.split("=")[1];
 
   var playerId = uuid.v4();
+
+  var playerCards = [];
   socket.emit("joinRoom", { room: room, playerId: playerId });
 
   socket.on("gameStart", function (player) {
@@ -54,10 +56,14 @@
   socket.on("receiveCards", function (data) {
     console.log("Receive cards");
     console.log(data);
+    playerCards = playerCards.concat(data);
+    displayHand(playerCards);
   });
 
   var displayHand = function (cards) {
     sortCards(cards);
+    playerCards = cards;
+    $("#hand").html("");
     for (var i = 0; i < cards.length; i++) {
       var card = cards[i];
       var suit = card.suit;
