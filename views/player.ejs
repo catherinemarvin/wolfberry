@@ -38,6 +38,7 @@
           var suit = $el.data("suit");
           var value = $el.data("value");
           cards.push({ suit: suit, value: value });
+          $el.remove();
         });
         socket.emit("passCards", { room: room, cards: cards })
       }
