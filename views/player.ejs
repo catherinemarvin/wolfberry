@@ -42,6 +42,8 @@
           cards.push({ suit: suit, value: value });
           $el.remove();
         });
+        $("#status").text("");
+        $("#action").html("");
         socket.emit("passCards", { room: room, cards: cards })
       }
     });
