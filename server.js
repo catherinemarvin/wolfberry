@@ -208,6 +208,15 @@ io.sockets.on("connection", function (socket) {
           console.log(socketToPassTo);
 
           io.sockets.socket(socketToPassTo).emit("receiveCards", cardsToPass);
+
+          var hasTwoOfClubs = player.hand.filter(function (card) {
+            return card.suit === "spades" && card.value === 14
+          }).length;
+
+          if (hasTwoOfClubs) {
+            console.log("Found somebody with two of clubs");
+            io.sockets.socket(socketToPassTo).emit("yourTurn");
+          }
         }
       });
     }

@@ -62,6 +62,12 @@
     displayHand(playerCards);
   });
 
+  socket.on("yourTurn", function (data) {
+    console.log("It's your turn!");
+    $("#action").html("<button>Play</button>");
+    $("#status").text("Play a card");
+  });
+
   var displayHand = function (cards) {
     sortCards(cards);
     playerCards = cards;
