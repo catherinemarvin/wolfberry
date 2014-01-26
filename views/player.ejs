@@ -15,6 +15,30 @@
   var playerCards = [];
   socket.emit("joinRoom", { room: room, playerId: playerId });
 
+  $(".pass").click(function () {
+    var selected = $(".selected");
+    if (selected.length == 3) {
+      var cards = [];
+      selected.each(function (index, el) {
+        var $el = $(el);
+        var suit = $el.data("suit");
+        var value = $el.data("value");
+        cards.push({ suit: suit, value: value });
+        $el.remove();
+      });
+      $("#status").text("");
+      $("#action").html("");
+      socket.emit("passCards", { room: room, cards: cards })
+    }
+  });
+
+  $(".play").click(function () {
+    var selected = $(".selected");
+    if (selected.length == 1) {
+      console.log("Passing card");
+    }
+  });
+
   socket.on("gameStart", function (player) {
     $("#position").append("<b>"+player.position+"</b>");
     displayHand(player.hand);
@@ -29,22 +53,6 @@
         if (numSelected < 3) {
           $(this).addClass("selected");
         }
-      }
-    });
-    $(".pass").click(function () {
-      var selected = $(".selected")
-      if (selected.length == 3) {
-        var cards = [];
-        selected.each(function (index, el) {
-          var $el = $(el);
-          var suit = $el.data("suit");
-          var value = $el.data("value");
-          cards.push({ suit: suit, value: value });
-          $el.remove();
-        });
-        $("#status").text("");
-        $("#action").html("");
-        socket.emit("passCards", { room: room, cards: cards })
       }
     });
   });
@@ -64,7 +72,7 @@
 
   socket.on("yourTurn", function (data) {
     console.log("It's your turn!");
-    $("#action").html("<button>Play</button>");
+    $("#action").html("<button class='btn play'>Play</button>");
     $("#status").text("Play a card");
   });
 
