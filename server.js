@@ -222,6 +222,10 @@ io.sockets.on("connection", function (socket) {
     }
     else { console.log(roomPasses); }
   });
+  socket.on("playCard", function (data) {
+    console.log("Player played a card");
+    console.log(data);
+  });
 });
 
 var leftPass = {

@@ -15,28 +15,34 @@
   var playerCards = [];
   socket.emit("joinRoom", { room: room, playerId: playerId });
 
-  $(".pass").click(function () {
-    var selected = $(".selected");
-    if (selected.length == 3) {
-      var cards = [];
-      selected.each(function (index, el) {
-        var $el = $(el);
-        var suit = $el.data("suit");
-        var value = $el.data("value");
-        cards.push({ suit: suit, value: value });
-        $el.remove();
-      });
-      $("#status").text("");
-      $("#action").html("");
-      socket.emit("passCards", { room: room, cards: cards })
-    }
-  });
+  console.log("ok");
+  $(document).ready(function () {
+    console.log("what");
+    $(".pass").click(function () {
+      console.log("wee woo");
+      var selected = $(".selected");
+      if (selected.length == 3) {
+        var cards = [];
+        selected.each(function (index, el) {
+          var $el = $(el);
+          var suit = $el.data("suit");
+          var value = $el.data("value");
+          cards.push({ suit: suit, value: value });
+          $el.remove();
+        });
+        $("#status").text("");
+        $("#action").html("");
+        socket.emit("passCards", { room: room, cards: cards })
+      }
+    });
 
-  $(".play").click(function () {
-    var selected = $(".selected");
-    if (selected.length == 1) {
-      console.log("Passing card");
-    }
+    $(".play").click(function () {
+      var $selected = $(".selected");
+      if ($selected.length == 1) {
+        console.log("Passing card");
+        socket.emit("playCard", { room: room, card: $selected })
+      }
+    });
   });
 
   socket.on("gameStart", function (player) {
