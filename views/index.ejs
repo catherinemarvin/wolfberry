@@ -7,9 +7,11 @@
     if (data) {
       window.location.href = "/room/" + data;
     }
-    else {
-      console.log("room doesn't exist");
-    }
+  });
+
+  socket.on("error", function (error) {
+    console.log("wee woo");
+    $(".error").text(error);
   });
 
   $(document).ready(function () {

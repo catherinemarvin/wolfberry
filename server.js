@@ -74,7 +74,8 @@ app.get("/joinRoom", function (req, res) {
       res.render("player", { room: roomId });
     }
     else {
-      console.log("room not found!");
+      res.status(404);
+      res.render("404", { error: "room not found" });
     }
   });
 });
@@ -130,7 +131,7 @@ io.sockets.on("connection", function (socket) {
     var roomId = parseInt(data, 10);
     db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
       if (!room) {
-        console.log("This room doesn't exist!");
+        socket.emit("error", "Room doesn't exist");
         roomId = null;
       }
       socket.emit("boardJoinRoomConfirmation", roomId);
