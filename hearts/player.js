@@ -16,6 +16,18 @@ Player.prototype.receiveCard = function (card) {
   this.hand.push(card);
 };
 
+Player.prototype.removeCard = function (card) {
+  var removePos;
+  for (var i = 0; i < this.hand.length; i++) {
+    var handCard = this.hand[i];
+    if (handCard.suit === card.suit && handCard.value === card.value) {
+      removePos = i;
+      break;
+    }
+  }
+  this.hand.splice(removePos,1);
+};
+
 Player.prototype.playCard = function (card) {
   var index = this.hand.indexOf(card);
   if (index == -1) {
