@@ -30,7 +30,7 @@
         });
         $("#status").text("");
         $("#action").html("");
-        socket.emit("passCards", { room: room, cards: cards })
+        socket.emit("passCards", { room: room, cards: cards });
       }
     });
 

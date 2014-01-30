@@ -10,6 +10,9 @@ var Player = function (name, position) {
 };
 
 Player.prototype.receiveCard = function (card) {
+  if (this.hand.length == 13) {
+    throw new Error("You can't have more than 13 cards in your hand!");
+  }
   this.hand.push(card);
 };
 
