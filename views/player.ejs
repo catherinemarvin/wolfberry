@@ -27,7 +27,18 @@
           var value = $el.data("value");
           cards.push({ suit: suit, value: value });
           $el.remove();
+
+          var indexToRemove;
+          for (var i = 0; i < playerCards.length; i++) {
+            var card = playerCards[i];
+            if (card.value === value && card.suit === suit) {
+              indexToRemove = i;
+              break;
+            }
+          }
+          playerCards.splice(indexToRemove,1);
         });
+
         $("#status").text("");
         $("#action").html("");
         socket.emit("passCards", { room: room, cards: cards });

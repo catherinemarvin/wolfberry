@@ -173,6 +173,7 @@ io.sockets.on("connection", function (socket) {
     console.log(passCards);
     var cards = data.cards;
     var room = data.room;
+    var roomId = parseInt(room, 10);
 
     var roomPasses = passCards[room];
     if (!roomPasses) {
@@ -181,47 +182,65 @@ io.sockets.on("connection", function (socket) {
     }
     roomPasses[socket.id] = cards;
 
-    if (Object.keys(roomPasses).length == 4) {
-      // We've received all the cards to be passed
-      console.log("Pass cards!");
-      console.log("Room passes");
-      console.log(roomPasses);
-      var roomId = parseInt(room, 10);
-      db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
-        var game = room.gameState;
-        game.__proto__ = hearts.Game.prototype;
-        console.log("Game state");
-        console.log(game);
-        var players = game.players;
-        for (var i = 0; i < players.length; i++) {
-          var player = players[i];
-          console.log("Player");
-          console.log(player);
-          player.__proto__ = hearts.Player.prototype;
+    db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
+      var game = room.gameState;
+      game.__proto__ = hearts.Game.prototype;
+      var players = game.players;
 
-          var cardsToPass = roomPasses[player.name];
-          var positionToPassTo = leftPass[player.position];
-          var socketToPassTo = players.filter(function (player) {
-            return player.position === positionToPassTo;
-          })[0].name;
+      var passedPlayer = players.filter(function (player) {
+        return player.name === socket.id;
+      })[0];
 
-          console.log("Pass to this socket");
-          console.log(socketToPassTo);
+      if (!passedPlayer) {
+        throw new Error("Somehow, couldn't locate the player that passed the cards?");
+      }
 
-          io.sockets.socket(socketToPassTo).emit("receiveCards", cardsToPass);
+      passedPlayer.__proto__ = hearts.Player.prototype;
 
-          var hasTwoOfClubs = player.hand.filter(function (card) {
-            return card.suit === "spades" && card.value === 14
-          }).length;
+      for (var i = 0; i < cards.length; i++) {
+        passedPlayer.removeCard(cards[i]);
+      }
 
-          if (hasTwoOfClubs) {
-            console.log("Found somebody with two of clubs");
-            io.sockets.socket(socketToPassTo).emit("yourTurn");
+      console.log("Post-removal hand");
+      console.log(passedPlayer.hand);
+      console.log("Room info");
+      console.log(room.gameState.players[0]);
+      console.log(room.gameState.players[1]);
+      console.log(room.gameState.players[2]);
+      console.log(room.gameState.players[3]);
+
+      db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, room) {
+        if (Object.keys(roomPasses).length == 4) {
+          // We've received all the cards to be passed
+          for (var i = 0; i < players.length; i++) {
+            var player = players[i];
+            player.__proto__ = hearts.Player.prototype;
+
+            var cardsToPass = roomPasses[player.name];
+            var positionToPassTo = leftPass[player.position];
+            var socketToPassTo = players.filter(function (player) {
+              return player.position === positionToPassTo;
+            })[0].name;
+
+
+            console.log("Pass to this socket");
+            console.log(socketToPassTo);
+
+            io.sockets.socket(socketToPassTo).emit("receiveCards", cardsToPass);
+
+            var hasTwoOfClubs = player.hand.filter(function (card) {
+              return card.suit === "clubs" && card.value === 2
+            }).length;
+
+            if (hasTwoOfClubs) {
+              console.log("Found somebody with two of clubs");
+              io.sockets.socket(socketToPassTo).emit("yourTurn");
+            }
           }
         }
+        else { console.log(roomPasses); }
       });
-    }
-    else { console.log(roomPasses); }
+    });
   });
   socket.on("playCard", function (data) {
     console.log("Player played a card");
