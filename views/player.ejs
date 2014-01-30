@@ -41,14 +41,8 @@
         socket.emit("playCard", { room: room, card: $selected })
       }
     });
-  });
 
-  socket.on("gameStart", function (player) {
-    $("#position").append("<b>"+player.position+"</b>");
-    displayHand(player.hand);
-    $("#status").text("Choose three cards to pass to the left");
-    $("#action").append("<button class='btn pass'>Pass</button>");
-    $(".card").click(function () {
+    $(document).on("click", ".card", function () {
       if ($(this).hasClass("selected")) {
         $(this).removeClass("selected");
       }
@@ -59,6 +53,13 @@
         }
       }
     });
+  });
+
+  socket.on("gameStart", function (player) {
+    $("#position").append("<b>"+player.position+"</b>");
+    displayHand(player.hand);
+    $("#status").text("Choose three cards to pass to the left");
+    $("#action").append("<button class='btn pass'>Pass</button>");
   });
 
 
