@@ -13,6 +13,8 @@
   var playerId = uuid.v4();
 
   var playerCards = [];
+
+  var maxSelected = 3;
   socket.emit("joinRoom", { room: room, playerId: playerId });
 
   $(document).ready(function () {
@@ -42,6 +44,7 @@
         $("#status").text("");
         $("#action").html("");
         socket.emit("passCards", { room: room, cards: cards });
+        maxSelected = 1;
       }
     });
 
@@ -59,7 +62,7 @@
       }
       else {
         var numSelected = $(".selected").length;
-        if (numSelected < 3) {
+        if (numSelected < maxSelected) {
           $(this).addClass("selected");
         }
       }
