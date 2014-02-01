@@ -201,15 +201,7 @@ io.sockets.on("connection", function (socket) {
         passedPlayer.removeCard(cards[i]);
       }
 
-      console.log("Post-removal hand");
-      console.log(passedPlayer.hand);
-      console.log("Room info");
-      console.log(room.gameState.players[0]);
-      console.log(room.gameState.players[1]);
-      console.log(room.gameState.players[2]);
-      console.log(room.gameState.players[3]);
-
-      db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, room) {
+      db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {
         if (Object.keys(roomPasses).length == 4) {
           // We've received all the cards to be passed
           for (var i = 0; i < players.length; i++) {
@@ -218,27 +210,27 @@ io.sockets.on("connection", function (socket) {
 
             var cardsToPass = roomPasses[player.name];
             var positionToPassTo = leftPass[player.position];
-            var socketToPassTo = players.filter(function (player) {
-              return player.position === positionToPassTo;
-            })[0].name;
 
+            var playerToPassTo = players.filter(function (player) {
+              return player.position === positionToPassTo;
+            })[0];
+            var socketToPassTo = playerToPassTo.name;
 
             console.log("Pass to this socket");
             console.log(socketToPassTo);
 
-            io.sockets.socket(socketToPassTo).emit("receiveCards", cardsToPass);
-
-            var hasTwoOfClubs = player.hand.filter(function (card) {
-              return card.suit === "clubs" && card.value === 2
-            }).length;
-
-            if (hasTwoOfClubs) {
-              console.log("Found somebody with two of clubs");
-              io.sockets.socket(player.name).emit("yourTurn");
+            for (var j = 0; j < cardsToPass.length; j++) {
+              var cardToPass = cardsToPass[j];
+              playerToPassTo.__proto__ = hearts.Player.prototype;
+              playerToPassTo.receiveCard(cardToPass);
             }
+
+            io.sockets.socket(socketToPassTo).emit("receiveCards", cardsToPass);
           }
+          db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {
+            leadTwoOfClubs(roomId);
+          });
         }
-        else { console.log(roomPasses); }
       });
     });
   });
@@ -247,6 +239,22 @@ io.sockets.on("connection", function (socket) {
     console.log(data);
   });
 });
+
+// Kick off the round by telling the player with the two of clubs to lead.
+var leadTwoOfClubs = function (roomId) {
+  db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
+    var game = room.gameState;
+    var players = game.players;
+
+    var starter = players.filter(function (player) {
+      return player.hand.filter(function (card) {
+        return card.value === 2 && card.suit === "clubs";
+      }).length > 0;
+    })[0];
+
+    io.sockets.socket(starter.name).emit("yourTurn");
+  });
+};
 
 var leftPass = {
   north: "east",
