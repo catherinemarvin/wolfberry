@@ -52,7 +52,9 @@
       var $selected = $(".selected");
       if ($selected.length == 1) {
         console.log("Passing card");
-        socket.emit("playCard", { room: room, card: $selected })
+        var suit = $selected.data("suit");
+        var value = $selected.data("value");
+        socket.emit("playCard", { room: room, card: { suit: suit, value: value } });
       }
     });
 
@@ -93,6 +95,10 @@
     console.log("It's your turn!");
     $("#action").html("<button class='btn play'>Play</button>");
     $("#status").text("Play a card");
+  });
+
+  socket.on("cardPlayed", function (data) {
+    console.log(data);
   });
 
   var displayHand = function (cards) {
