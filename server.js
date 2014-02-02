@@ -169,8 +169,6 @@ io.sockets.on("connection", function (socket) {
   // passCards looks like this;
   // { roomId: { socketId: cards } }
   socket.on("passCards", function (data) {
-    console.log("Passed cards");
-    console.log(passCards);
     var cards = data.cards;
     var room = data.room;
     var roomId = parseInt(room, 10);
@@ -215,9 +213,6 @@ io.sockets.on("connection", function (socket) {
               return player.position === positionToPassTo;
             })[0];
             var socketToPassTo = playerToPassTo.name;
-
-            console.log("Pass to this socket");
-            console.log(socketToPassTo);
 
             for (var j = 0; j < cardsToPass.length; j++) {
               var cardToPass = cardsToPass[j];
