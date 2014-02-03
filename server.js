@@ -231,7 +231,24 @@ io.sockets.on("connection", function (socket) {
   });
   socket.on("playCard", function (data) {
     console.log("Player played a card");
-    console.log(data);
+    var roomId = parseInt(data.room,10);
+    var card = data.card;
+
+    db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
+      var game = room.gameState;
+      game.__proto__ = hearts.Game.prototype;
+      var player = game.players.filter(function (player) {
+        return player.name === socket.id;
+      })[0];
+      player.__proto__ = hearts.Player.prototype;
+
+      if (game.playedCard(player, card)) {
+        console.log("Player can play card");
+      }
+      else {
+        console.log("Illegal move");
+      }
+    });
   });
 });
 

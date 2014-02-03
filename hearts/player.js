@@ -29,10 +29,20 @@ Player.prototype.removeCard = function (card) {
 };
 
 Player.prototype.playCard = function (card) {
-  var index = this.hand.indexOf(card);
+  var index;
+  for (var i = 0; i < this.hand.length; i++) {
+    var curr = this.hand[i];
+    if (curr.suit === card.suit && curr.value === card.value) {
+      index = i;
+      break;
+    }
+  }
+
   if (index == -1) {
     throw new Error("Tried to play a card not in your hand!");
   }
+
+  return this.hand.splice(index, 1);
 
   // Logic about whether or not this card is a legal move.
 
@@ -54,7 +64,7 @@ Player.prototype.playCard = function (card) {
       throw new Error("You can't lead Hearts until it has been broken");
     }
   }
-  this.hand.splice(index, 1);
+  return this.hand.splice(index, 1);
 };
 
 Player.prototype.scoreTricks = function () {

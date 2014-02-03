@@ -63,6 +63,32 @@ Game.prototype.playedCard = function (player, card) {
     throw new Error("You're trying to play a card that's already been played");
   }
 
+  if (player.playCard(card)) {
+    // check for whether or not this card is a legal move
+    var ledCard = this.currentTrick[0];
+    if (ledCard) {
+      var ledSuit = ledCard.suit;
+      if (card.suit !== ledSuit) {
+        matchingSuitCards = player.hand.filter(function (card) {
+          return card.suit === ledSuit;
+        });
+        if (matchingSuitCards.length !== 0) {
+          throw new Error("You must follow suit if you can!");
+        }
+      }
+    }
+    else {
+      if (card.suit === "hearts" && !this.penaltyCardPlayed) {
+        throw new Error("Can't lead hearts until it has been broken");
+      }
+    }
+    this.currentTrick.push(card);
+    return true;
+  }
+  else {
+    throw new Error("Illegal");
+  }
+
   this.currentTrick.push(card);
   return true;
 };
