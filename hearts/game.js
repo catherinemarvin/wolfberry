@@ -5,7 +5,7 @@ var Game = function () {
   this.players = [];
   this.currentTrick = [];
   this.penaltyCardPlayed = false;
-  this.firstTrick = [];
+  this.firstTrick = true;
   this.currentPlayer = null;
   this.started = false;
   this.deck = new Deck();
@@ -65,6 +65,12 @@ Game.prototype.playedCard = function (player, card) {
 
   if (player.playCard(card)) {
     // check for whether or not this card is a legal move
+
+    if (this.firstTrick) {
+      if (card.suit !== "clubs" || card.value !== 2) {
+        throw new Error("You must lead with the 2 of clubs");
+      }
+    }
     var ledCard = this.currentTrick[0];
     if (ledCard) {
       var ledSuit = ledCard.suit;
