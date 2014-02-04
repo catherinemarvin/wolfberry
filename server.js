@@ -244,6 +244,9 @@ io.sockets.on("connection", function (socket) {
 
       if (game.playedCard(player, card)) {
         console.log("Player can play card");
+        db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {
+          console.log("wee woo");
+        });
       }
       else {
         console.log("Illegal move");
