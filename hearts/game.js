@@ -96,8 +96,15 @@ Game.prototype.playedCard = function (player, card) {
   }
 
   this.currentTrick.push(card);
+
+  if (this.currentTrick.length == this.players.length) {
+    this.finishTrick();
+  }
   return true;
 };
+
+Game.prototype.finishTrick = function () {
+}
 
 Game.prototype.scoreRound = function () {
   for (var i = 0; i < this.players.length; i++) {

@@ -245,7 +245,7 @@ io.sockets.on("connection", function (socket) {
       if (game.playedCard(player, card)) {
         console.log("Player can play card");
         db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {
-          console.log("wee woo");
+          notifyNextPlayer(player, room);
         });
       }
       else {
@@ -254,6 +254,18 @@ io.sockets.on("connection", function (socket) {
     });
   });
 });
+
+var notifyNextPlayer = function (player, room) {
+  var currentPos = player.position;
+  var nextPos = leftPass[currentPos];
+
+  var playerToPassTo = room.gameState.players.filter(function (player) {
+    return player.position === nextPos;
+  })[0];
+  var socketToPassTo = playerToPassTo.name;
+
+  io.sockets.socket(socketToPassTo).emit("yourTurn");
+};
 
 // Kick off the round by telling the player with the two of clubs to lead.
 var leadTwoOfClubs = function (roomId) {
