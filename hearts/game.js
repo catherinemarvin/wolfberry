@@ -9,6 +9,8 @@ var Game = function () {
   this.currentPlayer = null;
   this.started = false;
   this.deck = new Deck();
+  this.ledCard = null;
+  this.trickCardToPlayer = {};
   return this;
 };
 
@@ -66,11 +68,6 @@ Game.prototype.playedCard = function (player, card) {
   if (player.playCard(card)) {
     // check for whether or not this card is a legal move
 
-    if (this.firstTrick) {
-      if (card.suit !== "clubs" || card.value !== 2) {
-        throw new Error("You must lead with the 2 of clubs");
-      }
-    }
     var ledCard = this.currentTrick[0];
     if (ledCard) {
       var ledSuit = ledCard.suit;
@@ -84,16 +81,23 @@ Game.prototype.playedCard = function (player, card) {
       }
     }
     else {
+      if (this.firstTrick) {
+        if (card.suit !== "clubs" || card.value !== 2) {
+          throw new Error("You must lead with the 2 of clubs");
+        }
+      }
       if (card.suit === "hearts" && !this.penaltyCardPlayed) {
         throw new Error("Can't lead hearts until it has been broken");
       }
+      this.ledCard = card;
     }
 
     if (card.suit === "hearts") {
       this.penaltyCardPlayed = true;
     }
-    this.currentTrick.push(card);
-    return true;
+
+    var cardTransform = card.value + card.suit;
+    this.trickCardToPlayer[cardTransform] = player;
   }
   else {
     throw new Error("Illegal");
@@ -109,6 +113,25 @@ Game.prototype.playedCard = function (player, card) {
 
 // give tricks to the correct player
 Game.prototype.finishTrick = function () {
+  var ledCard = this.ledCard;
+  var winningCard = this.currentTrick.filter(function (card) {
+    return card.suit === ledCard.suit;
+  }).reduce(function (prev, curr) {
+    if (curr.value > prev.value) {
+      return curr;
+    }
+    else {
+      return prev;
+    }
+  });
+
+  var cardTransform = winningCard.value + winningCard.suit;
+  this.trickCardToPlayer[cardTransform].takeTrick(this.currentTrick);
+  this.currentTrick = [];
+  this.ledCard = null;
+  this.penaltyCardPlayed = false;
+  this.firstTrick = false;
+  this.trickCardToPlayer = {};
 }
 
 Game.prototype.scoreRound = function () {

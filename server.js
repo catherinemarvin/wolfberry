@@ -237,10 +237,13 @@ io.sockets.on("connection", function (socket) {
     db.collection("rooms").findOne({ roomId: roomId }, function (err, room) {
       var game = room.gameState;
       game.__proto__ = hearts.Game.prototype;
+      for (var i = 0; i < game.players.length; i++) {
+        game.players[i].__proto__ = hearts.Player.prototype;
+      }
+
       var player = game.players.filter(function (player) {
         return player.name === socket.id;
       })[0];
-      player.__proto__ = hearts.Player.prototype;
 
       if (game.playedCard(player, card)) {
         console.log("Player can play card");
