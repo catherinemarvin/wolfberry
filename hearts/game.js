@@ -88,6 +88,10 @@ Game.prototype.playedCard = function (player, card) {
         throw new Error("Can't lead hearts until it has been broken");
       }
     }
+
+    if (card.suit === "hearts") {
+      this.penaltyCardPlayed = true;
+    }
     this.currentTrick.push(card);
     return true;
   }
@@ -103,6 +107,7 @@ Game.prototype.playedCard = function (player, card) {
   return true;
 };
 
+// give tricks to the correct player
 Game.prototype.finishTrick = function () {
 }
 
