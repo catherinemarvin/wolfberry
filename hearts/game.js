@@ -11,6 +11,7 @@ var Game = function () {
   this.deck = new Deck();
   this.ledCard = null;
   this.trickCardToPlayer = {};
+  this.tricksPlayed = 0;
   return this;
 };
 
@@ -132,6 +133,11 @@ Game.prototype.finishTrick = function () {
   this.penaltyCardPlayed = false;
   this.firstTrick = false;
   this.trickCardToPlayer = {};
+  this.tricksPlayed++;
+
+  if (this.tricksPlayed === 13) {
+    throw new Error("End the round");
+  }
 }
 
 Game.prototype.scoreRound = function () {
