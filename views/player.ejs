@@ -103,7 +103,7 @@
       var indexToRemove;
       for (var i = 0; i < playerCards.length; i++) {
         var card = playerCards[i];
-        if (card.value === $selected.value && card.suit === $selected.suit) {
+        if (card.value === $selected.data("value") && card.suit === $selected.data("suit")) {
           indexToRemove = i;
           break;
         }
