@@ -97,8 +97,26 @@
     $("#status").text("Play a card");
   });
 
-  socket.on("cardPlayed", function (data) {
-    console.log(data);
+  socket.on("legalPlay", function (legal) {
+    if (legal) {
+      var $selected = $(".selected");
+      var indexToRemove;
+      for (var i = 0; i < playerCards.length; i++) {
+        var card = playerCards[i];
+        if (card.value === $selected.value && card.suit === $selected.suit) {
+          indexToRemove = i;
+          break;
+        }
+      }
+      playerCards.splice(indexToRemove,1);
+      displayHand(playerCards);
+
+      $("#status").text("");
+      $("#action").html("");
+    }
+    else {
+      console.log("You can't do this");
+    }
   });
 
   var displayHand = function (cards) {

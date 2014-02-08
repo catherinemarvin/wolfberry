@@ -249,10 +249,12 @@ io.sockets.on("connection", function (socket) {
         console.log("Player can play card");
         db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {
           notifyNextPlayer(player, room);
+          socket.emit("legalPlay", true);
         });
       }
       else {
         console.log("Illegal move");
+        socket.emit("legalPlay", false);
       }
     });
   });
