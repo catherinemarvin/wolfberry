@@ -127,7 +127,10 @@ Game.prototype.finishTrick = function () {
   });
 
   var cardTransform = winningCard.value + winningCard.suit;
-  this.trickCardToPlayer[cardTransform].takeTrick(this.currentTrick);
+  var player = this.trickCardToPlayer[cardTransform];
+  console.log("Position taking trick: "+player.position);
+  player.__proto__ = Player.prototype;
+  player.takeTrick(this.currentTrick);
   this.currentTrick = [];
   this.ledCard = null;
   this.penaltyCardPlayed = false;
