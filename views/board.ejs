@@ -23,6 +23,11 @@
     console.log(data);
   });
 
+  socket.on("cardPlayed", function (data) {
+    console.log("Card played");
+    console.log(data);
+  });
+
   $(document).ready(function () {
     $("#startGame").click(function () {
       socket.emit("start game", room);

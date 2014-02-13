@@ -250,6 +250,22 @@ io.sockets.on("connection", function (socket) {
         db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {
           notifyNextPlayer(player, room);
           socket.emit("legalPlay", true);
+
+          var roomSocketIds = io.sockets.clients(data.room).map(function (client) {
+            return client.id;
+          });
+          console.log(roomSocketIds);
+
+          var playerSocketIds = game.players.map(function (player) {
+            return player.name;
+          });
+
+          console.log(playerSocketIds);
+          var boardSocketId = roomSocketIds.filter(function (socketId) {
+            return playerSocketIds.indexOf(socketId) < 0;
+          });
+
+          io.sockets.socket(boardSocketId).emit("cardPlayed", { player: player, card: card });
         });
       }
       else {
