@@ -26,6 +26,8 @@
   socket.on("cardPlayed", function (data) {
     console.log("Card played");
     console.log(data);
+    var player = data.player;
+    var card = data.card;
   });
 
   $(document).ready(function () {
