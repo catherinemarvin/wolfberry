@@ -39,14 +39,7 @@ app.get("/room/:roomId", function (req, res) {
     if (!room) {
       res.redirect("/");
     }
-
-    var userAgent = req.header("user-agent");
-    if (/mobile/i.test(userAgent)) {
-      res.render("mobileboard", { room: roomId });
-    }
-    else {
-      res.render("board", { room: roomId });
-    }
+    res.render("board", { room: roomId });
   });
 });
 
