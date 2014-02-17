@@ -241,24 +241,12 @@ io.sockets.on("connection", function (socket) {
       if (game.playedCard(player, card)) {
         console.log("Player can play card");
         db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {
-          notifyNextPlayer(player, room);
           socket.emit("legalPlay", true);
-
-          var roomSocketIds = io.sockets.clients(data.room).map(function (client) {
-            return client.id;
+          notifyNextPlayer(player, room);
+          notifyBoard(data.room, game, {
+            socketEvent: "cardPlayed",
+            socketData: { player: player, card: card }
           });
-          console.log(roomSocketIds);
-
-          var playerSocketIds = game.players.map(function (player) {
-            return player.name;
-          });
-
-          console.log(playerSocketIds);
-          var boardSocketId = roomSocketIds.filter(function (socketId) {
-            return playerSocketIds.indexOf(socketId) < 0;
-          });
-
-          io.sockets.socket(boardSocketId).emit("cardPlayed", { player: player, card: card });
         });
       }
       else {
@@ -279,6 +267,25 @@ var notifyNextPlayer = function (player, room) {
   var socketToPassTo = playerToPassTo.name;
 
   io.sockets.socket(socketToPassTo).emit("yourTurn");
+};
+
+var notifyBoard = function (room, game, msg) {
+  var roomSocketIds = io.sockets.clients(room).map(function (client) {
+    return client.id;
+  });
+
+  var playerSocketIds = game.players.map(function (player) {
+    return player.name;
+  });
+
+  var boardSocketId = roomSocketIds.filter(function (socketId) {
+    return playerSocketIds.indexOf(socketId) < 0;
+  });
+
+  var socketEvent = msg.socketEvent;
+  var socketData = msg.socketData;
+
+  io.sockets.socket(boardSocketId).emit(socketEvent, socketData);
 };
 
 // Kick off the round by telling the player with the two of clubs to lead.
