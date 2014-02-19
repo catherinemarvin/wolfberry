@@ -91,6 +91,7 @@ io.sockets.on("connection", function (socket) {
         catch (e) {
           console.log(e);
           io.sockets['in'](room).emit("failure", e);
+          return;
         }
         roomObj.gameStarted = true;
         db.collection("rooms").update({ roomId: roomId }, roomObj, {}, function (err, room) {
