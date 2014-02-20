@@ -239,34 +239,29 @@ io.sockets.on("connection", function (socket) {
         return player.name === socket.id;
       })[0];
 
-      if (game.playedCard(player, card)) {
-        console.log("Player can play card");
-        db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {
-          socket.emit("legalPlay", true);
-          notifyNextPlayer(player, room);
-          notifyBoard(data.room, game, {
-            socketEvent: "cardPlayed",
-            socketData: { player: player, card: card, currentTrick: game.currentTrick }
+      game.playedCard(player, card, function (err, nextPlayer) {
+        if (!err) {
+          console.log("Player can play card");
+          db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {
+            socket.emit("legalPlay", true);
+            notifyPlayer(nextPlayer, room);
+            notifyBoard(data.room, game, {
+              socketEvent: "cardPlayed",
+              socketData: { player: player, card: card, currentTrick: game.currentTrick }
+            });
           });
-        });
-      }
-      else {
+        }
+        else {
         console.log("Illegal move");
         socket.emit("legalPlay", false);
-      }
+        }
+      });
     });
   });
 });
 
-var notifyNextPlayer = function (player, room) {
-  var currentPos = player.position;
-  var nextPos = leftPass[currentPos];
-
-  var playerToPassTo = room.gameState.players.filter(function (player) {
-    return player.position === nextPos;
-  })[0];
-  var socketToPassTo = playerToPassTo.name;
-
+var notifyPlayer = function (player, room) {
+  var socketToPassTo = player.name;
   io.sockets.socket(socketToPassTo).emit("yourTurn");
 };
 

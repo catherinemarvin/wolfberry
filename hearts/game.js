@@ -58,61 +58,90 @@ Game.prototype.startGame = function () {
   this.started = true;
 };
 
-Game.prototype.playedCard = function (player, card) {
-  if (this.currentTrick.length >= this.players.length) {
-    throw new Error("You're trying to play more cards on this trick than the number of players");
-  }
-  if (this.currentTrick.indexOf(card) != -1) {
-    throw new Error("You're trying to play a card that's already been played");
-  }
+// Callback prototype: function (err, nextPlayer)
+Game.prototype.playedCard = function (player, card, callback) {
+  var err, nextPlayer;
+  try {
+    if (this.currentTrick.length >= this.players.length) {
+      throw new Error("You're trying to play more cards on this trick than the number of players");
+    }
+    if (this.currentTrick.indexOf(card) != -1) {
+      throw new Error("You're trying to play a card that's already been played");
+    }
 
-  if (player.playCard(card)) {
-    // check for whether or not this card is a legal move
+    if (player.playCard(card)) {
+      // check for whether or not this card is a legal move
 
-    var ledCard = this.currentTrick[0];
-    if (ledCard) {
-      var ledSuit = ledCard.suit;
-      if (card.suit !== ledSuit) {
-        matchingSuitCards = player.hand.filter(function (card) {
-          return card.suit === ledSuit;
-        });
-        if (matchingSuitCards.length !== 0) {
-          throw new Error("You must follow suit if you can!");
+      var ledCard = this.currentTrick[0];
+      if (ledCard) {
+        var ledSuit = ledCard.suit;
+        if (card.suit !== ledSuit) {
+          matchingSuitCards = player.hand.filter(function (card) {
+            return card.suit === ledSuit;
+          });
+          if (matchingSuitCards.length !== 0) {
+            throw new Error("You must follow suit if you can!");
+          }
         }
       }
+      else {
+        if (this.firstTrick) {
+          if (card.suit !== "clubs" || card.value !== 2) {
+            throw new Error("You must lead with the 2 of clubs");
+          }
+        }
+        if (card.suit === "hearts" && !this.penaltyCardPlayed) {
+          throw new Error("Can't lead hearts until it has been broken");
+        }
+        this.ledCard = card;
+      }
+
+      if (card.suit === "hearts") {
+        this.penaltyCardPlayed = true;
+      }
+
+      var cardTransform = card.value + card.suit;
+      this.trickCardToPlayer[cardTransform] = player;
     }
     else {
-      if (this.firstTrick) {
-        if (card.suit !== "clubs" || card.value !== 2) {
-          throw new Error("You must lead with the 2 of clubs");
-        }
-      }
-      if (card.suit === "hearts" && !this.penaltyCardPlayed) {
-        throw new Error("Can't lead hearts until it has been broken");
-      }
-      this.ledCard = card;
+      throw new Error("Illegal");
     }
 
-    if (card.suit === "hearts") {
-      this.penaltyCardPlayed = true;
+    this.currentTrick.push(card);
+
+    if (this.currentTrick.length == this.players.length) {
+      nextPlayer = this.finishTrick();
     }
-
-    var cardTransform = card.value + card.suit;
-    this.trickCardToPlayer[cardTransform] = player;
+    else {
+      nextPlayer = this.playerToLeft(player);
+    }
   }
-  else {
-    throw new Error("Illegal");
+  catch (e) {
+    console.log(e);
+    err = e;
   }
-
-  this.currentTrick.push(card);
-
-  if (this.currentTrick.length == this.players.length) {
-    this.finishTrick();
-  }
-  return true;
+  callback(err, nextPlayer);
 };
 
-// give tricks to the correct player
+var leftPass = {
+  north: "east",
+  east: "south",
+  south: "west",
+  west: "north"
+};
+
+// returns the player to the left of this player
+Game.prototype.playerToLeft = function (player) {
+  var currentPos = player.position;
+  var nextPos = leftPass[currentPos];
+
+  var playerToPassTo = this.players.filter(function (p) {
+    return p.position === nextPos;
+  })[0];
+  return playerToPassTo;
+}
+
+// give tricks to the correct player. return the next player.
 Game.prototype.finishTrick = function () {
   var ledCard = this.ledCard;
   var winningCard = this.currentTrick.filter(function (card) {
@@ -141,6 +170,7 @@ Game.prototype.finishTrick = function () {
   if (this.tricksPlayed === 13) {
     throw new Error("End the round");
   }
+  return player;
 }
 
 Game.prototype.scoreRound = function () {
