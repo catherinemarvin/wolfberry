@@ -29,11 +29,23 @@
     var player = data.player;
     var card = data.card;
     var position = player.position;
+    var currentTrick = data.currentTrick;
 
     var src = "/images/cards/"+card.value+"_of_"+card.suit+".png";
-    console.log(src);
     $("#"+position).html("<img src='"+src+"'></img>");
+
+    if (currentTrick.length == 0) { // this means we cleaned up the trick we're playing
+      collectCards(currentTrick);
+    }
   });
+
+  var collectCards = function (currentTrick) {
+    var positions = ["north", "south", "east", "west"];
+    for (var i = 0; i < positions.length; i++) {
+      var $div = $("#"+positions[i]);
+      $div.html("");
+    }
+  }
 
   $(document).ready(function () {
     $("#startGame").click(function () {

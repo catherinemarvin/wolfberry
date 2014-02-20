@@ -246,7 +246,7 @@ io.sockets.on("connection", function (socket) {
           notifyNextPlayer(player, room);
           notifyBoard(data.room, game, {
             socketEvent: "cardPlayed",
-            socketData: { player: player, card: card }
+            socketData: { player: player, card: card, currentTrick: game.currentTrick }
           });
         });
       }
