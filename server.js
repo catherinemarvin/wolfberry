@@ -243,7 +243,7 @@ io.sockets.on("connection", function (socket) {
         if (!err) {
           console.log("Player can play card");
           db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {
-            socket.emit("legalPlay", true);
+            socket.emit("legalPlay", { legal: true });
             notifyPlayer(nextPlayer, room);
             notifyBoard(data.room, game, {
               socketEvent: "cardPlayed",
@@ -253,7 +253,7 @@ io.sockets.on("connection", function (socket) {
         }
         else {
         console.log("Illegal move");
-        socket.emit("legalPlay", false);
+        socket.emit("legalPlay", { legal: false, error: err.toString() });
         }
       });
     });

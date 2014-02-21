@@ -97,7 +97,8 @@
     $("#status").text("Play a card");
   });
 
-  socket.on("legalPlay", function (legal) {
+  socket.on("legalPlay", function (data) {
+    var legal = data.legal;
     if (legal) {
       var $selected = $(".selected");
       var indexToRemove;
@@ -115,7 +116,7 @@
       $("#action").html("");
     }
     else {
-      console.log("You can't do this");
+      $("#status").text(data.error);
     }
   });
 
