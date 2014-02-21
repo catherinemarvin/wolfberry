@@ -58,7 +58,7 @@ Game.prototype.startGame = function () {
   this.started = true;
 };
 
-// Callback prototype: function (err, nextPlayer)
+// Callback prototype: function (err, nextPlayer, endOfRound)
 Game.prototype.playedCard = function (player, card, callback) {
   var err, nextPlayer;
   try {
@@ -120,7 +120,8 @@ Game.prototype.playedCard = function (player, card, callback) {
     console.log(e);
     err = e;
   }
-  callback(err, nextPlayer);
+  var endOfRound = this.tricksPlayed === 13;
+  callback(err, nextPlayer, endOfRound);
 };
 
 var leftPass = {
@@ -162,13 +163,12 @@ Game.prototype.finishTrick = function () {
   player.takeTrick(this.currentTrick);
   this.currentTrick = [];
   this.ledCard = null;
-  this.penaltyCardPlayed = false;
   this.firstTrick = false;
   this.trickCardToPlayer = {};
   this.tricksPlayed++;
 
   if (this.tricksPlayed === 13) {
-    throw new Error("End the round");
+    player = null;
   }
   return player;
 }

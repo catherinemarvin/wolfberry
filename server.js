@@ -239,8 +239,11 @@ io.sockets.on("connection", function (socket) {
         return player.name === socket.id;
       })[0];
 
-      game.playedCard(player, card, function (err, nextPlayer) {
-        if (!err) {
+      game.playedCard(player, card, function (err, nextPlayer, endOfRound) {
+        if (!err && endOfRound) {
+          console.log("End of the round!");
+        }
+        else if (!err) {
           console.log("Player can play card");
           db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {
             socket.emit("legalPlay", { legal: true });
