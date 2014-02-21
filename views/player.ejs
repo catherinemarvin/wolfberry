@@ -116,9 +116,13 @@
       $("#action").html("");
     }
     else {
-      $("#status").text(data.error);
+      flashError(data.error);
     }
   });
+
+  var flashError = function (msg) {
+    $("#status").text(msg);
+  }
 
   var displayHand = function (cards) {
     sortCards(cards);
