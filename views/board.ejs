@@ -14,7 +14,6 @@
   socket.emit("boardJoinRoom", { room: room });
 
   socket.on("boardGameStart", function (data) {
-    console.log(data);
     $("#gameBoard").show();
   });
 
@@ -24,8 +23,6 @@
   });
 
   socket.on("cardPlayed", function (data) {
-    console.log("Card played");
-    console.log(data);
     var player = data.player;
     var card = data.card;
     var position = player.position;

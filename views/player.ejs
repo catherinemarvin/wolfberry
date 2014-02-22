@@ -51,7 +51,6 @@
     $(document).on("click", ".play", function () {
       var $selected = $(".selected");
       if ($selected.length == 1) {
-        console.log("Passing card");
         var suit = $selected.data("suit");
         var value = $selected.data("value");
         socket.emit("playCard", { room: room, card: { suit: suit, value: value } });
@@ -85,14 +84,11 @@
   });
 
   socket.on("receiveCards", function (data) {
-    console.log("Receive cards");
-    console.log(data);
     playerCards = playerCards.concat(data);
     displayHand(playerCards);
   });
 
   socket.on("yourTurn", function (data) {
-    console.log("It's your turn!");
     $("#action").html("<button class='btn play'>Play</button>");
     $("#status").text("Play a card");
   });

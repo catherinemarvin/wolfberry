@@ -224,7 +224,6 @@ io.sockets.on("connection", function (socket) {
     });
   });
   socket.on("playCard", function (data) {
-    console.log("Player played a card");
     var roomId = parseInt(data.room,10);
     var card = data.card;
 
@@ -244,7 +243,6 @@ io.sockets.on("connection", function (socket) {
           console.log("End of the round!");
         }
         else if (!err) {
-          console.log("Player can play card");
           db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {
             socket.emit("legalPlay", { legal: true });
             notifyPlayer(nextPlayer, room);
