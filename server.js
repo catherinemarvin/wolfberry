@@ -241,6 +241,14 @@ io.sockets.on("connection", function (socket) {
       game.playedCard(player, card, function (err, nextPlayer, endOfRound) {
         if (!err && endOfRound) {
           console.log("End of the round!");
+          game.scoreRound();
+          db.collection("rooms").update({ roomId: roomId }, room, {}, function (err, updated) {
+            socket.emit("legalPlay", { legal: true });
+            notifyBoard(data.room, game, {
+              socketEvent: "roundEnded",
+              socketData: { players: game.players }
+            });
+          });
         }
         else if (!err) {
           db.collection("rooms").update( { roomId: roomId }, room, {}, function (err, updated) {

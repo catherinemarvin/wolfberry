@@ -44,6 +44,14 @@
     }
   }
 
+  socket.on("roundEnded", function (data) {
+    var players = data.players
+    for (var i = 0; i < players.length; i++) {
+      var player = players[i];
+      $("#"+player.position+"Score").text(player.score);
+    }
+  });
+
   $(document).ready(function () {
     $("#startGame").click(function () {
       socket.emit("start game", room);
@@ -62,4 +70,11 @@ Room: <%- room %>
   <div id="east">East</div>
   <div id="south">South</div>
   <div id="west">West</div>
+</div>
+
+<div id="scoreBoard">
+  <div id="northScore">0</div>
+  <div id="eastScore">0</div>
+  <div id="southScore">0</div>
+  <div id="westScore">0</div>
 </div>
