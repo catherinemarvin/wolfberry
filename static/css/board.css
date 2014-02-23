@@ -41,3 +41,9 @@
   left: 0;
   top: 200px;
 }
+
+#scoreBoard {
+  position: absolute;
+  top: 50px;
+  right: 200px;
+}
