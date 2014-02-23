@@ -174,7 +174,7 @@ Game.prototype.finishTrick = function () {
 
 Game.prototype.scoreRound = function () {
   for (var i = 0; i < this.players.length; i++) {
-    players[i].scoreTricks();
+    this.players[i].scoreTricks();
   }
 };
 
