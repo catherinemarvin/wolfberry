@@ -22,6 +22,12 @@
     console.log(data);
   });
 
+  var leftPass = {
+    north: "east",
+    east: "south",
+    south: "west",
+    west: "north"
+  }
   socket.on("cardPlayed", function (data) {
     var player = data.player;
     var card = data.card;
@@ -34,6 +40,8 @@
     if (currentTrick.length == 0) { // this means we cleaned up the trick we're playing
       collectCards(currentTrick);
     }
+
+    $("#currentPlayer").text(leftPass[position]);
   });
 
   var collectCards = function (currentTrick) {
@@ -77,4 +85,7 @@ Room: <%- room %>
   East: <div id="eastScore">0</div>
   South:<div id="southScore">0</div>
   West: <div id="westScore">0</div>
+</div>
+
+<div id="currentPlayer">
 </div>

@@ -158,7 +158,6 @@ Game.prototype.finishTrick = function () {
 
   var cardTransform = winningCard.value + winningCard.suit;
   var player = this.trickCardToPlayer[cardTransform];
-  player.__proto__ = Player.prototype;
   player.takeTrick(this.currentTrick);
   this.currentTrick = [];
   this.ledCard = null;

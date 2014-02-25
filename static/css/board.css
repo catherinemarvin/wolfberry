@@ -47,3 +47,9 @@
   top: 50px;
   right: 200px;
 }
+
+#currentPlayer {
+  position: absolute;
+  top: 200px;
+  right: 200px;
+}
